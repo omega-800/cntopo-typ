@@ -32,7 +32,7 @@
         let
           inherit (pkgs.lib.fileset) toSource unions;
           tcntop = pkgs.buildTypstPackage {
-            pname = "tcntop";
+            pname = "cntopo";
             version = "0.0.1";
             src = toSource {
               root = ./.;
