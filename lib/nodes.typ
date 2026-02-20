@@ -122,7 +122,7 @@
     cetz.draw.circle(
       (0, 0),
       radius: (sx * 0.35, sy * 0.35),
-      stroke: stroke,
+      stroke: stroke-i,
       fill: fill-i,
     )
     arr((sx * 0.6, 0), arrs)

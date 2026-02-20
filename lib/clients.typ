@@ -27,6 +27,7 @@
   flat: true,
 ) => {
   let ((x, y), (sx, sy)) = resolve-pos(pos.pos(), (1, 0.8))
+  let (stroke-i, fill-i) = resolve-style(stroke, fill, stroke-inner, fill-inner)
 
   let rt = cetz.draw.rect.with(
     stroke: stroke,
@@ -46,6 +47,7 @@
     rt(
       (-sx*0.9, -sy * 0.4),
       (sx*0.9, sy * 0.9),
+      fill: fill-i
       // radius: 5pt,
     )
     rt(
@@ -98,6 +100,7 @@
   type: "default",
 ) => {
   let ((x, y), (sx, sy)) = resolve-pos(pos.pos(), (0.5, 1))
+  let (stroke-i, fill-i) = resolve-style(stroke, fill, stroke-inner, fill-inner)
 
   let rt = cetz.draw.rect.with(
     stroke: stroke,
