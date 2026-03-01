@@ -42,21 +42,23 @@
     rt(
       (-sx, -sy * 0.5),
       (sx, sy),
+      // TODO: relative
       radius: 5pt,
     )
     rt(
-      (-sx*0.9, -sy * 0.4),
-      (sx*0.9, sy * 0.9),
-      fill: fill-i
+      (-sx * 0.9, -sy * 0.4),
+      (sx * 0.9, sy * 0.9),
+      fill: fill-i,
       // radius: 5pt,
     )
     rt(
-      (-sx*0.2, -sy * 0.5),
-      (sx*0.2, -sy * 0.8),
+      (-sx * 0.2, -sy * 0.5),
+      (sx * 0.2, -sy * 0.8),
     )
     rt(
-      (-sx*0.5, -sy),
-      (sx*0.5, -sy * 0.8),
+      (-sx * 0.5, -sy),
+      (sx * 0.5, -sy * 0.8),
+      // TODO: relative
       radius: 5pt,
     )
   })
@@ -116,6 +118,7 @@
       (-sx, sy * 0.55),
       (sx, sy),
       radius: (
+        // TODO: relative
         north-east: 5pt,
         north-west: 5pt,
       ),
@@ -135,6 +138,7 @@
       (-sx, -sy),
       (sx, -sy * 0.75),
       radius: (
+        // TODO: relative
         south-east: 5pt,
         south-west: 5pt,
       ),

@@ -110,6 +110,7 @@
   flat: true,
   type: "default",
   label: none,
+  label-pos: bottom,
   class: "router",
   radius: auto,
 ) => {
@@ -121,16 +122,17 @@
     fill-inner,
   )
   let radius = if radius == auto {
-    if class == "router" { 50% } else { 5pt }
+    if class == "router" { 50% } else { 5% }
   } else { radius }
 
   cetz.draw.group({
     cetz.draw.set-origin((x, y))
     node-container(sx, sy, radius, stroke, fill)
     node-classes.at(class)(sx, sy, stroke-i, fill-i)
-    if label != none {
-      cetz.draw.content(((sx, -sy), 0%, (sx, sy)), label)
-    }
+    lbl(label, label-pos, sx, sy)
+    // if label != none {
+    // cetz.draw.content(((sx, -sy), 0%, (sx, sy)), label)
+    // }
   })
 }
 

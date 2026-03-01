@@ -1,5 +1,15 @@
 #import "deps.typ": *
 
+#let lbl = (
+  label,
+  // TODO:
+  label-pos,
+  sx,
+  sy,
+) => if label != none {
+  cetz.draw.content(((sx, -sy), 0%, (sx, sy)), label)
+} else {}
+
 // TODO: reposition
 #let to-3d = (is-flat, x, y) => {
   let mat = if is-flat {
