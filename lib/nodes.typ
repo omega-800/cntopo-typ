@@ -53,45 +53,48 @@
     arr((sx * 0.6, 0), arrs)
   },
 )
-#let node-container = (sx, sy, radius, stroke, fill) => {
-  // TODO:
-  // to-3d(flat, x, y)
-  // cetz.draw.circle(
-  //   (0, 0, 1),
-  //   radius: (sx, sy),
-  //   stroke: stroke,
-  //   fill: fill,
-  // )
-  // TODO: angle
-  // cetz.draw.line(
-  //   (sx, 0, 1),
-  //   (sx, 0, 0),
-  //   (-sx, 0, 0),
-  //   (-sx, 0, 1),
-  //   fill: fill,
-  //   stroke: stroke,
-  // )
-
-  // TODO:
-  // to-3d(flat, x, y)
-  // cetz.draw.rect(
-  //   (-sx, -sy, 1),
-  //   (sx, sy, 1),
-  //   stroke: stroke,
-  //   fill: fill,
-  //   radius: 5pt,
-  // )
-  // TODO: radius
-  // cetz.draw.line(
-  //   (sx, sy, 0),
-  //   (sx, sy, 1),
-  //   (sx, -sy, 1),
-  //   (sx, -sy, 0),
-  //   (-sx, sy, 0),
-  //   (-sx, sy, 1),
-  //   fill: fill,
-  //   stroke: stroke,
-  // )
+#let node-container = (sx, sy, x, y, radius, stroke, fill, flat) => {
+  let is-circle = radius > 40%
+  if not flat {
+    to-3d(x, y, is-circle)
+    let l = if is-circle {
+      (
+        (sx, sy * 1 / 8, 1),
+        (sx, 0, 0),
+        (-sx, 0, 0),
+        (-sx, sy * 1 / 8, 1),
+      )
+    } else {
+      (
+        (sx, sy, 0),
+        (sx, sy, 1),
+        (sx, -sy, 1),
+        (sx, -sy, 0),
+        (-sx, sy, 0),
+        (-sx, sy, 1),
+      )
+    }
+    let s = to-stroke(stroke)
+    cetz.draw.rect(
+      (-sx, -sy, 1),
+      (sx, sy, 1),
+      stroke: stroke,
+      fill: fill,
+      radius: radius,
+    )
+    cetz.draw.line(
+      ..l,
+      fill: fill,
+      stroke: (
+        paint: s.paint,
+        thickness: if s.thickness == auto { 1pt } else { s.thickness },
+        cap: s.cap,
+        join: "miter",
+        dash: s.dash,
+        miter-limit: 1,
+      ),
+    )
+  }
   cetz.draw.rect(
     (-sx, -sy),
     (sx, sy),
@@ -108,7 +111,7 @@
   stroke-inner: auto,
   fill-inner: auto,
   flat: true,
-  type: "default",
+  detail: none,
   label: none,
   label-pos: bottom,
   class: "router",
@@ -124,15 +127,53 @@
   let radius = if radius == auto {
     if class == "router" { 50% } else { 5% }
   } else { radius }
+  let is-circle = radius > 40%
+  let (sx-i, sy-i) = if detail != none and flat {
+    (sx * 3 / 4, sy * 3 / 4)
+  } else {
+    (sx, sy)
+  }
+  let off-i = if detail != none and flat { y * 1 / 25 } else { 0 }
 
   cetz.draw.group({
     cetz.draw.set-origin((x, y))
-    node-container(sx, sy, radius, stroke, fill)
-    node-classes.at(class)(sx, sy, stroke-i, fill-i)
-    lbl(label, label-pos, sx, sy)
-    // if label != none {
-    // cetz.draw.content(((sx, -sy), 0%, (sx, sy)), label)
-    // }
+    cetz.draw.group({
+      node-container(sx, sy, x, y, radius, stroke, fill, flat)
+      cetz.draw.group({
+        cetz.draw.set-origin((0, off-i))
+        node-classes.at(class)(sx-i, sy-i, stroke-i, fill-i)
+      })
+    })
+
+    // TODO: label-pos
+    // FIXME: label absolute gap instead of relative
+    if label != none {
+      let pos = if flat {
+        (0, -sy * 6 / 5)
+      } else {
+        (if is-circle { 0 } else { -sx * 1 / 5 }, -sy * 4 / 5)
+      }
+      cetz.draw.content(pos, label)
+    }
+
+    if detail != none {
+      let pos = if flat {
+        (0, -sy * 3 / 4)
+      } else {
+        (if is-circle { 0 } else { -sx * 1 / 5 }, -sy * 2 / 5)
+      }
+      if type(detail) == str and detail in node-classes {
+        cetz.draw.group({
+          cetz.draw.set-origin(pos)
+          node-classes.at(detail)(sx * .25, sy * .25, stroke-i, fill-i)
+        })
+      } else {
+        cetz.draw.content(
+          pos,
+          text(fill: fill-inner, weight: "bold", detail),
+        )
+      }
+    }
   })
 }
 

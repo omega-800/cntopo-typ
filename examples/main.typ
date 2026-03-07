@@ -1,11 +1,13 @@
 #import "../lib/main.typ": cetz, icons, to-fletcher-shapes
 #import "@preview/fletcher:0.5.8" as fletcher: diagram, edge, node
 
+#set text(font: "FreeSans")
+
 #let i = icons(
-  fill: white,
-  fill-inner: blue,
-  stroke-inner: blue,
-  stroke: blue + 2pt,
+  fill: blue,
+  fill-inner: white,
+  stroke-inner: white,
+  stroke: blue.lighten(50%) + 2pt,
   flat: false,
 )
 
@@ -41,12 +43,19 @@
     stroke: blue,
     step: 1,
   )
-  i-monitor((-3, 3))
-  i-server((-1, 3))
-  i-switch((1, 3))
-  i-l3-switch((-3, 1))
-  i-router((-1, 1))
-  i-cloud((1, 1))
+  i-monitor(label: "a",(-3, 3))
+  i-server(label: "as",(-1, 3))
+  i-switch(label: "asd",(1, 3), detail: "Sw099112")
+  i-switch(label: "asdf",(-3, 1), detail: "S1")
+  i-router(label: "asdff",(-1, 1), detail: "R1")
+  i-cloud(label: "asdfff",(1, 1))
+  i-switch(label: "asdffff",(-2, -2), (2, 2), detail: "S3")
+  i-router(label: "q",(2, -2), (2, 2), detail: "R3")
+  i-switch(label: "qw",(-3, 5), flat: true, detail: "S2")
+  i-router(label: "qwe",(-1, 5), flat: true, detail: [router])
+  i-l3-switch(label: "qwer",(1, 5), flat: true, detail: "L3S2")
+  i-l3-switch(label: "qwerr",(3, 5), flat: true, detail: "router")
+  i-l3-switch(label: "qwerrr",(3, 3), flat: false, detail: "router")
 })
 
 #let node = node.with(width: 4em, height: 4em)

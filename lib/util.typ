@@ -10,28 +10,19 @@
   cetz.draw.content(((sx, -sy), 0%, (sx, sy)), label)
 } else {}
 
-// TODO: reposition
-#let to-3d = (is-flat, x, y) => {
-  let mat = if is-flat {
-    (
-      (1, 0, 0, x),
-      (0, 1, 0, -y),
-      (0, 0, 1, 0),
-      (0, 0, 0, 1),
-    )
-  } else {
-    (
-      (1, 0, 0, x),
-      (0, 0.5, 0.5, -y - 0.25),
-      (0, 0, 1, 0),
-      (0, 0, 0, 1),
-    )
-  }
-  let (xs, ys, _) = cetz.matrix.mul4x4-vec3(mat, (x, y, 0))
+// TODO: mirror
+#let to-3d = (x, y, circle) => {
+  let (yn, xn) = if circle { (0, 1) } else { (-1 / 4, 3 / 4) }
+  let mat = (
+    (xn, yn, 0, x),
+    (0, 3 / 8, 1 / 2, -y - 1 / 4),
+    (0, 0, 1, 0),
+    (0, 0, 0, 1),
+  )
   cetz.draw.set-transform(mat)
-  if not is-flat { cetz.draw.rotate(15deg) }
 }
 #let stroke-to-paint = s => if type(s) == stroke { s.paint } else { s }
+#let to-stroke = s => if type(s) == stroke { s } else { (paint: s) }
 
 #let resolve-pos = (pos, (dsx, dsy)) => {
   let s = pos.at(1, default: (dsx, dsy))
