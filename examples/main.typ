@@ -15,7 +15,6 @@
 
 #let (
   i-monitor,
-  i-laptop,
   i-router,
   i-wl-router,
   i-switch,
@@ -33,7 +32,6 @@
 
 #let (
   monitor,
-  laptop,
   router,
   switch,
   l3-switch,

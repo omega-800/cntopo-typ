@@ -10,7 +10,7 @@
   cetz.draw.content(((sx, -sy), 0%, (sx, sy)), label)
 } else {}
 
-// TODO: mirror
+// FIXME: fletcher doesn't provide x,y pos
 #let to-3d = (x, y, circle) => {
   let (yn, xn) = if circle { (0, 1) } else { (1 / 4, 3 / 4) }
   let mat = (
