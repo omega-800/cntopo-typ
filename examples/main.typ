@@ -15,10 +15,12 @@
   i-monitor,
   i-laptop,
   i-router,
+  i-wv-router,
   i-switch,
   i-l3-switch,
   i-server,
   i-cloud,
+  i-lock,
 ) = (
   i.pairs().map(((k, v)) => ("i-" + k, v)).to-dict()
 )
@@ -49,13 +51,16 @@
   i-switch(label: "asdf",(-3, 1), detail: "S1")
   i-router(label: "asdff",(-1, 1), detail: "R1")
   i-cloud(label: "asdfff",(1, 1))
-  i-switch(label: "asdffff",(-2, -2), (2, 2), detail: "S3")
-  i-router(label: "q",(2, -2), (2, 2), detail: "R3")
+  // i-switch(label: "asdffff",(-2, -2), (2, 2), detail: "S3")
+  // i-router(label: "q",(2, -2), (2, 2), detail: "R3")
+  i-wv-router(label: "q",(1, -1), wireless: true, detail: "secure")
+  i-router(label: "q",(-1, -1), wireless: true)
   i-switch(label: "qw",(-3, 5), flat: true, detail: "S2")
   i-router(label: "qwe",(-1, 5), flat: true, detail: [router])
   i-l3-switch(label: "qwer",(1, 5), flat: true, detail: "L3S2")
   i-l3-switch(label: "qwerr",(3, 5), flat: true, detail: "router")
   i-l3-switch(label: "qwerrr",(3, 3), flat: false, detail: "router")
+  i-lock(label: "qwerrr",(-3, -1))
 })
 
 #let node = node.with(width: 4em, height: 4em)

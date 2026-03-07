@@ -1,5 +1,6 @@
 #import "util.typ": *
 #import "shapes.typ": *
+#import "misc.typ": *
 
 #let node-classes = (
   "router": (sx, sy, stroke, fill) => {
@@ -53,55 +54,127 @@
     arr((sx * 0.6, 0), arrs)
   },
 )
-#let node-container = (sx, sy, x, y, radius, stroke, fill, flat) => {
-  let is-circle = radius > 40%
-  if not flat {
-    to-3d(x, y, is-circle)
-    let l = if is-circle {
-      (
+#let node-details = (
+  "secure": (sx, sy, stroke, fill, stroke-inner, fill-inner) => {
+    lock((0, 0), (sx, sy))
+  },
+)
+#let node-containers = (
+  "circle": (sx, sy, x, y, radius, stroke, fill, flat) => {
+    if not flat {
+      to-3d(x, y, true)
+      cetz.draw.circle(
+        (0, 0, 1),
+        radius: (sx, sy),
+        stroke: stroke,
+        fill: fill,
+      )
+      cetz.draw.line(
         (sx, sy * 1 / 8, 1),
         (sx, 0, 0),
         (-sx, 0, 0),
         (-sx, sy * 1 / 8, 1),
+        fill: fill,
+        stroke: stroke,
       )
-    } else {
-      (
+    }
+    cetz.draw.circle(
+      (0, 0),
+      radius: (sx, sy),
+      stroke: stroke,
+      fill: fill,
+    )
+  },
+  "hex": (sx, sy, x, y, radius, stroke, fill, flat) => {
+    if not flat {
+      to-3d(x, y, true)
+      // cetz.draw.polygon(
+      //   (0, 0, 1),
+      //   6,
+      //   stroke: stroke,
+      //   fill: fill,
+      // )
+      cetz.draw.line(
+        (sx, sy * 1 / 8, 1),
+        (sx, 0, 0),
+        (-sx, 0, 0),
+        (-sx, sy * 1 / 8, 1),
+        (-sx / 2, sy, 1),
+        (sx / 2, sy, 1),
+        (sx, sy * 1 / 8, 1),
+        fill: fill,
+        stroke: stroke,
+      )
+    }
+    cetz.draw.polygon(
+      (0, 0),
+      6,
+      stroke: stroke,
+      fill: fill,
+    )
+  },
+  "rect": (sx, sy, x, y, radius, stroke, fill, flat) => {
+    if not flat {
+      to-3d(x, y, false)
+      cetz.draw.rect(
+        (-sx, -sy, 1),
+        (sx, sy, 1),
+        stroke: stroke,
+        fill: fill,
+        radius: radius,
+      )
+      cetz.draw.line(
         (sx, sy, 0),
         (sx, sy, 1),
         (sx, -sy, 1),
         (sx, -sy, 0),
         (-sx, sy, 0),
         (-sx, sy, 1),
+        fill: fill,
+        stroke: stroke,
       )
     }
-    let s = to-stroke(stroke)
+
     cetz.draw.rect(
-      (-sx, -sy, 1),
-      (sx, sy, 1),
+      (-sx, -sy),
+      (sx, sy),
       stroke: stroke,
       fill: fill,
       radius: radius,
     )
-    cetz.draw.line(
-      ..l,
-      fill: fill,
-      stroke: (
-        paint: s.paint,
-        thickness: if s.thickness == auto { 1pt } else { s.thickness },
-        cap: s.cap,
-        join: "miter",
-        dash: s.dash,
-        miter-limit: 1,
-      ),
-    )
-  }
-  cetz.draw.rect(
-    (-sx, -sy),
-    (sx, sy),
-    stroke: stroke,
+  },
+)
+
+#let antennas = (sx, sy, fill) => {
+  let xo = sx / 30
+  let xi = sx / 100
+  let yo = sy / 2
+  let yi = sy / 20
+  let ln = cetz.draw.line(
+    stroke: fill,
     fill: fill,
-    radius: radius,
+    (-xo, 0),
+    (-xo, yo - yi),
+    (-xi, yo - yi),
+    (-xi, yo + yi),
+    (-xo, yo + yi),
+    (-xo, sy * 2 / 3),
+
+    (xo, sy * 2 / 3),
+    (xo, yo + yi),
+    (xi, yo + yi),
+    (xi, yo - yi),
+    (xo, yo - yi),
+    (xo, 0),
   )
+  cetz.draw.group({
+    cetz.draw.set-origin((-sx * 2 / 3, sy * 1 / 3))
+    ln
+  })
+  cetz.draw.group({
+    cetz.draw.set-origin((sx * 2 / 3, sy * 1 / 3))
+    ln
+  })
 }
 
 #let node = (
@@ -115,7 +188,9 @@
   label: none,
   label-pos: bottom,
   class: "router",
+  shape: auto,
   radius: auto,
+  wireless: false,
 ) => {
   let ((x, y), (sx, sy)) = resolve-pos(pos.pos(), (1, 1))
   let (stroke-i, fill-i) = resolve-style(
@@ -125,11 +200,20 @@
     fill-inner,
   )
   let radius = if radius == auto {
-    if class == "router" { 50% } else { 5% }
+    if class == "router" { 0% } else { 5% }
   } else { radius }
-  let is-circle = radius > 40%
+
+  let shape = if shape == auto {
+    if class == "router" {
+      // FIXME: janky api
+      if detail == "wavelength" { "hex" } else { "circle" }
+    } else { "rect" }
+  } else { shape }
+
+  let is-circle = shape != "rect"
   let (sx-i, sy-i) = if detail != none and flat {
-    (sx * 3 / 4, sy * 3 / 4)
+    // TODO: do not transform switch arrows
+    (if class == "switch" { sx } else { sx * 3 / 4 }, sy * 3 / 4)
   } else {
     (sx, sy)
   }
@@ -137,8 +221,11 @@
 
   cetz.draw.group({
     cetz.draw.set-origin((x, y))
+    if wireless {
+      antennas(sx, sy, stroke-to-paint(stroke))
+    }
     cetz.draw.group({
-      node-container(sx, sy, x, y, radius, stroke, fill, flat)
+      node-containers.at(shape)(sx, sy, x, y, radius, stroke, fill, flat)
       cetz.draw.group({
         cetz.draw.set-origin((0, off-i))
         node-classes.at(class)(sx-i, sy-i, stroke-i, fill-i)
@@ -162,10 +249,16 @@
       } else {
         (if is-circle { 0 } else { -sx * 1 / 5 }, -sy * 2 / 5)
       }
-      if type(detail) == str and detail in node-classes {
+      let args = (sx * .25, sy * .25, stroke-i, fill-i)
+      if type(detail) == str and detail in node-details {
         cetz.draw.group({
           cetz.draw.set-origin(pos)
-          node-classes.at(detail)(sx * .25, sy * .25, stroke-i, fill-i)
+          node-details.at(detail)(..args, fill-inner, stroke-inner)
+        })
+      } else if type(detail) == str and detail in node-classes {
+        cetz.draw.group({
+          cetz.draw.set-origin(pos)
+          node-classes.at(detail)(..args)
         })
       } else {
         cetz.draw.content(

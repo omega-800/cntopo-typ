@@ -1,13 +1,5 @@
 #import "util.typ": *
 
-#let globe = (
-  ..pos,
-  stroke: stroke-def,
-  fill: fill-def,
-  stroke-inner: auto,
-  fill-inner: auto,
-) => {}
-
 #let cloud = (
   ..pos,
   stroke: stroke-def,
@@ -103,6 +95,40 @@
 }
 
 #let lock = (
+  ..pos,
+  stroke: stroke-def,
+  fill: fill-def,
+  stroke-inner: auto,
+  fill-inner: auto,
+) => {
+  let ((x, y), (sx, sy)) = resolve-pos(pos.pos(), (1, 1))
+  let (stroke-i, fill-i) = resolve-style(
+    stroke,
+    fill,
+    stroke-inner,
+    fill-inner,
+  )
+  cetz.draw.group({
+    cetz.draw.set-origin((x, y))
+    cetz.draw.rect((-sx, -sy), (sx, sy * 1 / 4), stroke: stroke, fill: fill)
+    cetz.draw.circle(
+      (0, -sy / 4),
+      radius: (sx / 7, sy / 7),
+      stroke: stroke,
+      fill: fill-i,
+    )
+    cetz.draw.line(
+      (-sx / 20, -sy * 10 / 27),
+      (-sx / 20, -sy * 3 / 5),
+      (sx / 20, -sy * 3 / 5),
+      (sx / 20, -sy * 10 / 27),
+      stroke: stroke,
+      fill: fill-i,
+    )
+  })
+}
+
+#let globe = (
   ..pos,
   stroke: stroke-def,
   fill: fill-def,

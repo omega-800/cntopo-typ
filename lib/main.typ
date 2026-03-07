@@ -5,6 +5,24 @@
 #import "links.typ": *
 #import "misc.typ": *
 
+#let icon-presets = (
+  // nodes
+  router: node.with(class: "router"),
+  secure-router: node.with(class: "router", detail: "secure"),
+  w-router: node.with(class: "router", wireless: true),
+  wv-router: node.with(class: "router", shape: "hex"),
+  wv-w-router: node.with(class: "router", shape: "hex", wireless: true),
+  switch: node.with(class: "switch"),
+  l3-switch: node.with(class: "l3-switch"),
+  // clients
+  monitor: monitor,
+  laptop: laptop,
+  server: server,
+  // misc
+  cloud: cloud,
+  lock: lock
+)
+
 #let icons = (
   stroke: stroke-def,
   fill: fill-def,
@@ -12,54 +30,19 @@
   fill-inner: auto,
   flat: true,
 ) => (
-  cloud: cloud.with(
-    stroke: stroke,
-    fill: fill,
-    stroke-inner: stroke-inner,
-    fill-inner: fill-inner,
-  ),
-  monitor: monitor.with(
-    stroke: stroke,
-    fill: fill,
-    stroke-inner: stroke-inner,
-    fill-inner: fill-inner,
-    flat: flat,
-  ),
-  laptop: laptop.with(
-    stroke: stroke,
-    fill: fill,
-    stroke-inner: stroke-inner,
-    fill-inner: fill-inner,
-    flat: flat,
-  ),
-  server: server.with(
-    stroke: stroke,
-    fill: fill,
-    stroke-inner: stroke-inner,
-    fill-inner: fill-inner,
-    flat: flat,
-  ),
-  router: router.with(
-    stroke: stroke,
-    fill: fill,
-    stroke-inner: stroke-inner,
-    fill-inner: fill-inner,
-    flat: flat,
-  ),
-  switch: switch.with(
-    stroke: stroke,
-    fill: fill,
-    stroke-inner: stroke-inner,
-    fill-inner: fill-inner,
-    flat: flat,
-  ),
-  l3-switch: l3-switch.with(
-    stroke: stroke,
-    fill: fill,
-    stroke-inner: stroke-inner,
-    fill-inner: fill-inner,
-    flat: flat,
-  ),
+  icon-presets
+    .pairs()
+    .map(((k, v)) => (
+      k,
+      v.with(
+        stroke: stroke,
+        fill: fill,
+        stroke-inner: stroke-inner,
+        fill-inner: fill-inner,
+        flat: flat,
+      ),
+    ))
+    .to-dict()
 )
 
 #let to-fletcher-shapes = i => (
