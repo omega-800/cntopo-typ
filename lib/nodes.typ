@@ -27,8 +27,16 @@
     arr((sx * 0.25, -sy * 0.2), arrs)
     cetz.draw.rotate(135deg)
   },
+  "hub": (sx, sy, stroke, fill) => {
+    arrows((0, 0), (sx * 1.6, sy), stroke: stroke, fill: fill, type: "two")
+  },
+  "fe-hub": (sx, sy, stroke, fill) => {
+    // TODO: standardized licon sizes
+    arrow((0, 0), (sx * 1.6, sy), stroke: stroke, fill: fill)
+  },
   "l3-switch": (sx, sy, stroke, fill) => {
     let arrs = (sx * 0.5, sy * 0.3)
+    let arrp = (sx * 0.6, 0)
     let arr = arrow.with(stroke: stroke, fill: fill)
 
     cetz.draw.circle(
@@ -37,26 +45,60 @@
       stroke: stroke,
       fill: fill,
     )
-    arr((sx * 0.6, 0), arrs)
+    arr(arrp, arrs)
     cetz.draw.rotate(45deg)
-    arr((sx * 0.6, 0), arrs)
+    arr(arrp, arrs)
     cetz.draw.rotate(45deg)
-    arr((sx * 0.6, 0), arrs)
+    arr(arrp, arrs)
     cetz.draw.rotate(45deg)
-    arr((sx * 0.6, 0), arrs)
+    arr(arrp, arrs)
     cetz.draw.rotate(45deg)
-    arr((sx * 0.6, 0), arrs)
+    arr(arrp, arrs)
     cetz.draw.rotate(45deg)
-    arr((sx * 0.6, 0), arrs)
+    arr(arrp, arrs)
     cetz.draw.rotate(45deg)
-    arr((sx * 0.6, 0), arrs)
+    arr(arrp, arrs)
     cetz.draw.rotate(45deg)
-    arr((sx * 0.6, 0), arrs)
+    arr(arrp, arrs)
+  },
+  "ap": (sx, sy, stroke, fill) => {
+    wireless-wave((0, -sy / 3), (sx * 0.8, sy * .1), stroke: stroke)
+  },
+  "dual-ap": (sx, sy, stroke, fill) => {
+    wireless-wave((0, -sy / 3), (sx * 0.8, sy * .1), stroke: stroke)
+    wireless-wave((0, sy / 3), (sx * 0.8, sy * .1), stroke: stroke)
+  },
+  "mesh-ap": (sx, sy, stroke, fill) => {
+    cetz.draw.content((0, sy / 3), text(
+      fill: stroke-to-paint(stroke),
+      // weight: "bold",
+      // TODO: dynamic font size
+      size: 2em,
+      // FIXME: skew text?
+    )[MESH])
+    wireless-wave((0, -sy / 3), (sx * 0.8, sy * .1), stroke: stroke)
   },
 )
 #let node-details = (
-  "secure": (sx, sy, stroke, fill, stroke-inner, fill-inner) => {
-    lock((0, 0), (sx, sy))
+  "secure": (sx, sy, stroke-i, fill-i, stroke, fill) => {
+    lock(
+      (0, 0),
+      (sx, sy),
+      stroke: fill,
+      fill: fill-i,
+      stroke-inner: stroke-i,
+      fill-inner: fill,
+    )
+  },
+  "cloud": (sx, sy, stroke-i, fill-i, stroke, fill) => {
+    cloud(
+      (0, 0),
+      (sx, sy),
+      stroke: fill,
+      fill: fill-i,
+      stroke-inner: stroke-i,
+      fill-inner: fill,
+    )
   },
 )
 #let node-containers = (
@@ -88,20 +130,14 @@
   "hex": (sx, sy, x, y, radius, stroke, fill, flat) => {
     if not flat {
       to-3d(x, y, true)
-      // cetz.draw.polygon(
-      //   (0, 0, 1),
-      //   6,
-      //   stroke: stroke,
-      //   fill: fill,
-      // )
       cetz.draw.line(
+        (-sx, 0, 0),
+        (-sx, 0, 1),
+        (-sx, sy * 1 / 8, 1),
+        (-sx / 2, -sy, 1),
+        (sx / 2, -sy, 1),
         (sx, sy * 1 / 8, 1),
         (sx, 0, 0),
-        (-sx, 0, 0),
-        (-sx, sy * 1 / 8, 1),
-        (-sx / 2, sy, 1),
-        (sx / 2, sy, 1),
-        (sx, sy * 1 / 8, 1),
         fill: fill,
         stroke: stroke,
       )
@@ -116,22 +152,21 @@
   "rect": (sx, sy, x, y, radius, stroke, fill, flat) => {
     if not flat {
       to-3d(x, y, false)
-      cetz.draw.rect(
-        (-sx, -sy, 1),
-        (sx, sy, 1),
-        stroke: stroke,
-        fill: fill,
-        radius: radius,
-      )
       cetz.draw.line(
         (sx, sy, 0),
         (sx, sy, 1),
         (sx, -sy, 1),
-        (sx, -sy, 0),
-        (-sx, sy, 0),
-        (-sx, sy, 1),
+        (-sx, -sy, 1),
+        (-sx, -sy, 0),
+        (-sx, 0, 0),
         fill: fill,
         stroke: stroke,
+      )
+      cetz.draw.line(
+        stroke: stroke,
+        (sx, -sy, 1),
+        (sx, -sy, 0),
+        (-sx, 0, 0),
       )
     }
 
@@ -144,38 +179,6 @@
     )
   },
 )
-
-#let antennas = (sx, sy, fill) => {
-  let xo = sx / 30
-  let xi = sx / 100
-  let yo = sy / 2
-  let yi = sy / 20
-  let ln = cetz.draw.line(
-    stroke: fill,
-    fill: fill,
-    (-xo, 0),
-    (-xo, yo - yi),
-    (-xi, yo - yi),
-    (-xi, yo + yi),
-    (-xo, yo + yi),
-    (-xo, sy * 2 / 3),
-
-    (xo, sy * 2 / 3),
-    (xo, yo + yi),
-    (xi, yo + yi),
-    (xi, yo - yi),
-    (xo, yo - yi),
-    (xo, 0),
-  )
-  cetz.draw.group({
-    cetz.draw.set-origin((-sx * 2 / 3, sy * 1 / 3))
-    ln
-  })
-  cetz.draw.group({
-    cetz.draw.set-origin((sx * 2 / 3, sy * 1 / 3))
-    ln
-  })
-}
 
 #let node = (
   ..pos,
@@ -213,16 +216,30 @@
   let is-circle = shape != "rect"
   let (sx-i, sy-i) = if detail != none and flat {
     // TODO: do not transform switch arrows
-    (if class == "switch" { sx } else { sx * 3 / 4 }, sy * 3 / 4)
+    (
+      if class == "switch" or class.ends-with("hub") or class.ends-with("ap") {
+        sx
+      } else { sx * 3 / 4 },
+      sy * 3 / 4,
+    )
   } else {
     (sx, sy)
   }
-  let off-i = if detail != none and flat { y * 1 / 25 } else { 0 }
+  let off-i = if detail != none and flat { sy / 6 } else { 0 }
 
   cetz.draw.group({
     cetz.draw.set-origin((x, y))
     if wireless {
-      antennas(sx, sy, stroke-to-paint(stroke))
+      if is-circle {
+        antennas((0, 0), (sx, sy), stroke: stroke-to-paint(stroke))
+      } else {
+        antennas(
+          (sx * 1 / 4, 0),
+          (sx, sy),
+          stroke: stroke-to-paint(stroke),
+          spacing: sx,
+        )
+      }
     }
     cetz.draw.group({
       node-containers.at(shape)(sx, sy, x, y, radius, stroke, fill, flat)
@@ -247,18 +264,24 @@
       let pos = if flat {
         (0, -sy * 3 / 4)
       } else {
-        (if is-circle { 0 } else { -sx * 1 / 5 }, -sy * 2 / 5)
+        (if is-circle { 0 } else { -sx / 4 }, -sy * 3 / 8)
       }
-      let args = (sx * .25, sy * .25, stroke-i, fill-i)
       if type(detail) == str and detail in node-details {
         cetz.draw.group({
           cetz.draw.set-origin(pos)
-          node-details.at(detail)(..args, fill-inner, stroke-inner)
+          node-details.at(detail)(
+            sx * .2,
+            sy * .2,
+            stroke-i,
+            fill-i,
+            stroke,
+            fill,
+          )
         })
       } else if type(detail) == str and detail in node-classes {
         cetz.draw.group({
           cetz.draw.set-origin(pos)
-          node-classes.at(detail)(..args)
+          node-classes.at(detail)(sx * .25, sy * .25, stroke-i, fill-i)
         })
       } else {
         cetz.draw.content(
@@ -278,17 +301,6 @@
 
 #let l3-switch = node.with(class: "l3-switch")
 
-// type: "default" | "small" | "1000baset"
-#let hub = (
-  ..pos,
-  stroke: stroke-def,
-  fill: fill-def,
-  stroke-inner: auto,
-  fill-inner: auto,
-  flat: true,
-  type: "default",
-) => {}
-
 #let bridge = (
   ..pos,
   stroke: stroke-def,
@@ -299,15 +311,6 @@
 ) => {}
 
 #let firewall = (
-  ..pos,
-  stroke: stroke-def,
-  fill: fill-def,
-  stroke-inner: auto,
-  fill-inner: auto,
-  flat: true,
-) => {}
-
-#let ap = (
   ..pos,
   stroke: stroke-def,
   fill: fill-def,

@@ -12,10 +12,10 @@
 
 // TODO: mirror
 #let to-3d = (x, y, circle) => {
-  let (yn, xn) = if circle { (0, 1) } else { (-1 / 4, 3 / 4) }
+  let (yn, xn) = if circle { (0, 1) } else { (1 / 4, 3 / 4) }
   let mat = (
     (xn, yn, 0, x),
-    (0, 3 / 8, 1 / 2, -y - 1 / 4),
+    (0, -3 / 8, 1 / 2, -y - 1 / 4),
     (0, 0, 1, 0),
     (0, 0, 0, 1),
   )
@@ -23,6 +23,19 @@
 }
 #let stroke-to-paint = s => if type(s) == stroke { s.paint } else { s }
 #let to-stroke = s => if type(s) == stroke { s } else { (paint: s) }
+#let override-stroke = (s, ..o) => {
+  let s-dict = if type(s) == stroke {
+    (
+      paint: s.paint,
+      thickness: s.thickness,
+      cap: s.cap,
+      join: s.join,
+      dash: s.dash,
+      miter-limit: s.miter-limit,
+    )
+  } else { (paint: s) }
+  (:..s-dict, ..o.named())
+}
 
 #let resolve-pos = (pos, (dsx, dsy)) => {
   let s = pos.at(1, default: (dsx, dsy))

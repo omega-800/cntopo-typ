@@ -5,22 +5,42 @@
 #import "links.typ": *
 #import "misc.typ": *
 
-#let icon-presets = (
-  // nodes
+#let default-nodes = (
   router: node.with(class: "router"),
-  secure-router: node.with(class: "router", detail: "secure"),
-  w-router: node.with(class: "router", wireless: true),
-  wv-router: node.with(class: "router", shape: "hex"),
-  wv-w-router: node.with(class: "router", shape: "hex", wireless: true),
+  wl-router: node.with(class: "router", shape: "hex"),
   switch: node.with(class: "switch"),
   l3-switch: node.with(class: "l3-switch"),
-  // clients
-  monitor: monitor,
-  laptop: laptop,
-  server: server,
-  // misc
-  cloud: cloud,
-  lock: lock
+  ap: node.with(class: "ap"),
+  dual-ap: node.with(class: "dual-ap"),
+  mesh-ap: node.with(class: "mesh-ap"),
+  hub: node.with(class: "hub"),
+  fe-hub: node.with(class: "fe-hub"),
+)
+
+#let icon-presets = (
+  default-nodes
+    .pairs()
+    .map(((k, v)) => (
+      (k, v),
+      ("w-" + k, v.with(wireless: true)),
+
+      ("sec-" + k, v.with(detail: "secure")),
+      ("w-sec-" + k, v.with(detail: "secure", wireless: true)),
+
+      ("cl-" + k, v.with(detail: "cloud")),
+      ("w-cl-" + k, v.with(detail: "cloud", wireless: true)),
+    ))
+    .join()
+    .to-dict()
+    + (
+      // clients
+      monitor: monitor,
+      // laptop: laptop,
+      server: server,
+      // misc
+      cloud: cloud,
+      lock: lock,
+    )
 )
 
 #let icons = (

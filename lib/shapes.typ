@@ -145,3 +145,69 @@
   }
 }
 
+#let antennas = (
+  ..pos,
+  stroke: stroke-def,
+  fill: auto,
+  spacing: auto,
+) => {
+  let ((x, y), (sx, sy)) = resolve-pos(pos.pos(), (1, 1))
+  let fill = if fill == auto { stroke-to-paint(stroke) } else { fill }
+  let spacing = if spacing == auto { sx * 2 / 3 } else { spacing / 2 }
+  let xo = sx / 30
+  let xi = sx / 100
+  let yo = sy / 2
+  let yi = sy / 20
+  let ln = cetz.draw.line(
+    stroke: stroke,
+    fill: fill,
+    (-xo, 0),
+    (-xo, yo - yi),
+    (-xi, yo - yi),
+    (-xi, yo + yi),
+    (-xo, yo + yi),
+    (-xo, sy * 2 / 3),
+
+    (xo, sy * 2 / 3),
+    (xo, yo + yi),
+    (xi, yo + yi),
+    (xi, yo - yi),
+    (xo, yo - yi),
+    (xo, 0),
+  )
+  cetz.draw.group({
+    cetz.draw.set-origin((x - spacing, y + sy * 1 / 3))
+    ln
+  })
+  cetz.draw.group({
+    cetz.draw.set-origin((x + spacing, y + sy * 1 / 3))
+    ln
+  })
+}
+
+#let wireless-wave = (
+  ..pos,
+  stroke: stroke-def,
+  stroke-inner: auto,
+  n: 6,
+) => {
+  let ((x, y), (sx, sy)) = resolve-pos(pos.pos(), (1, .1))
+  let stroke-inner = if stroke-inner == auto {
+    override-stroke(stroke, thickness: 3pt)
+  } else {
+    stroke-inner
+  }
+  let pts = range(n * 2 + 1).map(i => {
+    let mod = calc.rem(i, 3)
+    (
+      -sx + i * sx / n,
+      sy * (if mod == 0 { 0 } else if mod == 1 { -1 } else { 1 }),
+    )
+  })
+  let pts2 = pts.map(((x, y)) => (x, -y))
+  cetz.draw.group({
+    cetz.draw.set-origin((x, y))
+    cetz.draw.hobby(..pts, stroke: stroke-inner)
+    cetz.draw.hobby(..pts2, stroke: stroke)
+  })
+}

@@ -127,6 +127,7 @@
       (sx, -sy * 0.4),
       (-sx, sy * 0.5),
     )
+    // TODO: increase thickness
     crc((0, sy * 0.3), radius: (sx * 0.2, sy * 0.1), stroke: stroke-inner)
     // FIXME:
     cetz.draw.line((0, sx * 0.6), (0, sx * 0.8), stroke: stroke-inner)
