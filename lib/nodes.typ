@@ -62,21 +62,21 @@
     arr(arrp, arrs)
   },
   "ap": (sx, sy, stroke, fill) => {
-    wireless-wave((0, -sy / 3), (sx * 0.8, sy * .1), stroke: stroke)
+    wireless-wave((0, -sy * 2 / 7), (sx * 0.8, sy * .1), stroke: stroke)
   },
   "dual-ap": (sx, sy, stroke, fill) => {
-    wireless-wave((0, -sy / 3), (sx * 0.8, sy * .1), stroke: stroke)
-    wireless-wave((0, sy / 3), (sx * 0.8, sy * .1), stroke: stroke)
+    wireless-wave((0, -sy * 2 / 7), (sx * 0.8, sy * .1), stroke: stroke)
+    wireless-wave((0, sy * 2 / 7), (sx * 0.8, sy * .1), stroke: stroke)
   },
   "mesh-ap": (sx, sy, stroke, fill) => {
-    cetz.draw.content((0, sy / 3), text(
+    cetz.draw.content((0, sy * 2 / 7), text(
       fill: stroke-to-paint(stroke),
       // weight: "bold",
       // TODO: dynamic font size
       size: 2em,
       // FIXME: skew text?
     )[MESH])
-    wireless-wave((0, -sy / 3), (sx * 0.8, sy * .1), stroke: stroke)
+    wireless-wave((0, -sy * 2 / 7), (sx * 0.8, sy * .1), stroke: stroke)
   },
 )
 #let node-details = (
@@ -102,9 +102,8 @@
   },
 )
 #let node-containers = (
-  "circle": (sx, sy, x, y, radius, stroke, fill, flat) => {
+  "circle": (sx, sy, radius, stroke, fill, flat) => {
     if not flat {
-      to-3d(x, y, true)
       cetz.draw.circle(
         (0, 0, 1),
         radius: (sx, sy),
@@ -127,9 +126,8 @@
       fill: fill,
     )
   },
-  "hex": (sx, sy, x, y, radius, stroke, fill, flat) => {
+  "hex": (sx, sy, radius, stroke, fill, flat) => {
     if not flat {
-      to-3d(x, y, true)
       cetz.draw.line(
         (-sx, 0, 0),
         (-sx, 0, 1),
@@ -149,9 +147,8 @@
       fill: fill,
     )
   },
-  "rect": (sx, sy, x, y, radius, stroke, fill, flat) => {
+  "square": (sx, sy, radius, stroke, fill, flat) => {
     if not flat {
-      to-3d(x, y, false)
       cetz.draw.line(
         (sx, sy, 0),
         (sx, sy, 1),
@@ -173,6 +170,34 @@
     cetz.draw.rect(
       (-sx, -sy),
       (sx, sy),
+      stroke: stroke,
+      fill: fill,
+      radius: radius,
+    )
+  },
+  "rect": (sx, sy, radius, stroke, fill, flat) => {
+    if not flat {
+      cetz.draw.line(
+        (sx, sy * 2 / 3, 0),
+        (sx, sy * 2 / 3, 1),
+        (sx, -sy * 2 / 3, 1),
+        (-sx, -sy * 2 / 3, 1),
+        (-sx, -sy * 2 / 3, 0),
+        (-sx, 0, 0),
+        fill: fill,
+        stroke: stroke,
+      )
+      cetz.draw.line(
+        stroke: stroke,
+        (sx, -sy * 2 / 3, 1),
+        (sx, -sy * 2 / 3, 0),
+        (-sx, 0, 0),
+      )
+    }
+
+    cetz.draw.rect(
+      (-sx, -sy * 2 / 3),
+      (sx, sy * 2 / 3),
       stroke: stroke,
       fill: fill,
       radius: radius,
@@ -210,10 +235,10 @@
     if class == "router" {
       // FIXME: janky api
       if detail == "wavelength" { "hex" } else { "circle" }
-    } else { "rect" }
+    } else if class.ends-with("ap") { "rect" } else { "square" }
   } else { shape }
 
-  let is-circle = shape != "rect"
+  let is-circle = shape == "hex" or shape == "circle"
   let (sx-i, sy-i) = if detail != none and flat {
     // TODO: do not transform switch arrows
     (
@@ -242,27 +267,56 @@
       }
     }
     cetz.draw.group({
-      node-containers.at(shape)(sx, sy, x, y, radius, stroke, fill, flat)
-      cetz.draw.group({
-        cetz.draw.set-origin((0, off-i))
-        node-classes.at(class)(sx-i, sy-i, stroke-i, fill-i)
+      // if not flat { to-3d(x, y, is-circle) }
+      to-3d(flat, shape, {
+        node-containers.at(shape)(sx, sy, radius, stroke, fill, flat)
+        cetz.draw.group({
+          cetz.draw.set-origin((0, off-i))
+          node-classes.at(class)(sx-i, sy-i, stroke-i, fill-i)
+        })
       })
     })
 
     // TODO: label-pos
     // FIXME: label absolute gap instead of relative
     if label != none {
-      let pos = if flat {
-        (0, -sy * 6 / 5)
+      let x = if label-pos.x == none {
+        if flat or is-circle { 0 } else if label-pos.y == top {
+          sx * 1 / 5
+        } else {
+          -sx * 1 / 5
+        }
+      } else if label-pos.x == left { -sx } else { sx }
+      let y = if label-pos.y == none {
+        0
       } else {
-        (if is-circle { 0 } else { -sx * 1 / 5 }, -sy * 4 / 5)
+        (
+          // FIXME: should be relative to label, not icon size
+          (if flat { sy * 6 / 5 } else { sy * 4 / 5 })
+            * (if label-pos.y == top { 1 } else { -1 })
+        )
       }
-      cetz.draw.content(pos, label)
+      let pos = (x, y)
+      // let pos = if flat {
+      //   (0, -sy * 6 / 5)
+      // } else {
+      //   (if is-circle { 0 } else { -sx * 1 / 5 }, -sy)
+      // }
+      let anchor-y = if label-pos.y == top {
+        "south"
+      } else if label-pos.y == bottom { "north" } else { none }
+      let anchor-x = if label-pos.x == left {
+        "east"
+      } else if label-pos.x == right { "west" } else { none }
+      // TODO: proper anchor
+      cetz.draw.content(pos, label, anchor: if anchor-y != none {
+        anchor-y
+      } else { anchor-x })
     }
 
     if detail != none {
       let pos = if flat {
-        (0, -sy * 3 / 4)
+        (0, -sy * 11 / 16)
       } else {
         (if is-circle { 0 } else { -sx / 4 }, -sy * 3 / 8)
       }

@@ -108,10 +108,6 @@
     stroke: stroke,
     fill: fill,
   )
-  let crc = cetz.draw.circle.with(
-    stroke: stroke,
-    fill: fill,
-  )
   cetz.draw.group({
     cetz.draw.set-origin((x, y))
     rt(
@@ -127,9 +123,12 @@
       (sx, -sy * 0.4),
       (-sx, sy * 0.5),
     )
-    // TODO: increase thickness
-    crc((0, sy * 0.3), radius: (sx * 0.2, sy * 0.1), stroke: stroke-inner)
-    // FIXME:
+    cetz.draw.circle(
+      (0, sy * 0.3),
+      radius: (sx * 0.2, sy * 0.1),
+      stroke: stroke-inner,
+      fill: fill,
+    )
     cetz.draw.line((0, sx * 0.6), (0, sx * 0.8), stroke: stroke-inner)
     rt(
       (-sx, -sy * 0.7),

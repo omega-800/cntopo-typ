@@ -74,7 +74,8 @@
         // TODO: radius
         // panic(node, extrude, extra.pos(), extra.named())
         v(
-          (0,0),
+          (0, 0),
+          // node.pos.uv,
           node.size.map(i => i / 2 + extrude),
           ..extra.named(),
           stroke: node.stroke,

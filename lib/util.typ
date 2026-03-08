@@ -10,17 +10,44 @@
   cetz.draw.content(((sx, -sy), 0%, (sx, sy)), label)
 } else {}
 
-// FIXME: fletcher doesn't provide x,y pos
-#let to-3d = (x, y, circle) => {
-  let (yn, xn) = if circle { (0, 1) } else { (1 / 4, 3 / 4) }
-  let mat = (
-    (xn, yn, 0, x),
-    (0, -3 / 8, 1 / 2, -y - 1 / 4),
-    (0, 0, 1, 0),
-    (0, 0, 0, 1),
-  )
-  cetz.draw.set-transform(mat)
+#let to-3d = (flat, shape, c) => {
+  let circle = shape == "hex" or shape == "circle"
+  let off = if shape == "rect" { 1.08 } else { 1 }
+  if flat { c } else if circle {
+    cetz.draw.translate(y: .25)
+    cetz.draw.scale(y: 64%)
+    cetz.draw.ortho(
+      x: 60deg,
+      y: 0deg,
+      z: 0deg,
+      sorted: false,
+      c,
+    )
+  } else {
+    cetz.draw.translate(y: .25)
+    cetz.draw.scale(x: 84% * off, y: 50%)
+    cetz.draw.rotate(x: -17deg * off, y: -6deg * off)
+    cetz.draw.ortho(
+      x: 60deg,
+      y: -11deg,
+      z: -10deg,
+      sorted: false,
+      c,
+    )
+  }
 }
+
+// FIXME: fletcher doesn't provide x,y pos
+// #let to-3d = (x, y, circle) => {
+// let (yn, xn) = if circle { (0, 1) } else { (1 / 4, 3 / 4) }
+// let mat = (
+//   (xn, yn, 0, x),
+//   (0, -3 / 8, 1 / 2, -y - 1 / 4),
+//   (0, 0, 1, 0),
+//   (0, 0, 0, 1),
+// )
+// cetz.draw.set-transform(mat)
+// }
 #let stroke-to-paint = s => if type(s) == stroke { s.paint } else { s }
 #let to-stroke = s => if type(s) == stroke { s } else { (paint: s) }
 #let override-stroke = (s, ..o) => {
