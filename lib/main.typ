@@ -81,11 +81,11 @@
           (0, 0),
           // node.pos.uv,
           (xr * xs, yr * ys),
+          ..extra.named(),
           ..(
             if "override-color" in extra.named()
               and extra.named().override-color {
               (
-                ..extra.named(),
                 stroke: node.stroke,
                 fill: node.fill,
                 fill-inner: stroke-to-paint(node.stroke),

@@ -336,7 +336,7 @@
       } else {
         cetz.draw.content(
           pos,
-          text(fill: fill-inner, weight: "bold", detail),
+          text(fill: fill-i, weight: "bold", detail),
         )
       }
     }
