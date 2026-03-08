@@ -6,6 +6,8 @@
   fill: fill-def,
   stroke-inner: auto,
   fill-inner: auto,
+  label: none,
+  label-pos: bottom,
 ) => {
   let ((x, y), (sx, sy)) = resolve-pos(pos.pos(), (1, 0.75))
   // let y = y + sy / 3
@@ -49,6 +51,7 @@
         omega: 1,
       )
     })
+    draw-lbl(label, label-pos, sx, sy)
   })
 }
 
@@ -100,6 +103,8 @@
   fill: fill-def,
   stroke-inner: auto,
   fill-inner: auto,
+  label: none,
+  label-pos: bottom,
 ) => {
   let ((x, y), (sx, sy)) = resolve-pos(pos.pos(), (1, 1))
   let (stroke-i, fill-i) = resolve-style(
@@ -178,6 +183,7 @@
     top(fill, (1, .6))
     top(stroke, 1)
     top(stroke, .6)
+    draw-lbl(label, label-pos, sx, sy)
   })
 }
 

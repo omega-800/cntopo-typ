@@ -25,8 +25,10 @@
   stroke-inner: auto,
   fill-inner: auto,
   flat: true,
+  label: none,
+  label-pos: bottom,
 ) => {
-  let ((x, y), (sx, sy)) = resolve-pos(pos.pos(), (1, 0.8))
+  let ((x, y), (sx, sy)) = resolve-pos(pos.pos(), ratios.monitor)
   let (stroke-i, fill-i) = resolve-style(stroke, fill, stroke-inner, fill-inner)
 
   let rt = cetz.draw.rect.with(
@@ -61,6 +63,7 @@
       // TODO: relative
       radius: 5pt,
     )
+    draw-lbl(label, label-pos, sx, sy)
   })
 }
 
@@ -100,8 +103,10 @@
   fill-inner: auto,
   flat: true,
   type: "default",
+  label: none,
+  label-pos: bottom,
 ) => {
-  let ((x, y), (sx, sy)) = resolve-pos(pos.pos(), (0.5, 1))
+  let ((x, y), (sx, sy)) = resolve-pos(pos.pos(), ratios.server)
   let (stroke-i, fill-i) = resolve-style(stroke, fill, stroke-inner, fill-inner)
 
   let rt = cetz.draw.rect.with(
@@ -143,5 +148,6 @@
         south-west: 5pt,
       ),
     )
+    draw-lbl(label, label-pos, sx, sy)
   })
 }

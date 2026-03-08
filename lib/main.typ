@@ -71,12 +71,16 @@
     .map(((k, v)) => (
       k,
       (node, extrude, ..extra) => {
+        let (xr, yr) = if k in ratios {
+          ratios.at(k)
+        } else { (1, 1) }
+        let (xs, ys) = node.size.map(i => i / 2 + extrude)
         // TODO: radius
         // panic(node, extrude, extra.pos(), extra.named())
         v(
           (0, 0),
           // node.pos.uv,
-          node.size.map(i => i / 2 + extrude),
+          (xr * xs, yr * ys),
           ..extra.named(),
           stroke: node.stroke,
           fill: node.fill,

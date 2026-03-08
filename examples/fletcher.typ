@@ -3,49 +3,56 @@
 
 #set text(font: "FreeSans")
 
-#let node = node.with(width: 4em, height: 4em)
 #let ex = flat => {
-  let (monitor, switch, router, l3-switch, cloud) = fletcher-shapes(flat: flat)
+  let (server, monitor, switch, router, l3-switch, cloud, w-dual-ap) = fletcher-shapes(
+    flat: flat,
+  )
+  let node = node.with(width: 6em, height: 6em)
   diagram(
     node-stroke: orange,
     node-fill: orange.lighten(90%),
     node((-1, 1), shape: monitor.with(label: "192.168.0.69"), name: <c1>),
     node((-1, 2), shape: monitor.with(label: "192.168.0.33"), name: <c2>),
+    node((0, 2.5), shape: server.with(label: "192.168.0.101"), name: <srv1>),
+    node((1, 3), shape: server.with(label: "192.168.0.102"), name: <srv2>),
     node(
-      (0, 2),
+      (1, 2),
       shape: switch.with(
         detail: "S2",
       ),
       name: <s2>,
     ),
-    node((0, 1), shape: switch.with(detail: "S1"), name: <s1>),
+    node((0, 1), shape: l3-switch.with(detail: "S1"), name: <s1>),
     node(
-      (1, 1.5),
+      (1.75, 1),
       shape: router.with(detail: "R1"),
       name: <r1>,
     ),
     node(
-      (2, 1),
-      shape: l3-switch.with(detail: "S3"),
-      name: <s3>,
+      (3, 1),
+      shape: w-dual-ap.with(detail: "AP"),
+      name: <ap>,
     ),
     node(
-      enclose: (<c1>, <c2>, <s1>, <s2>),
-      inset: 4em,
+      enclose: (<c1>, <c2>, <srv1>, <srv2>, <s1>, <s2>),
+      inset: 5em,
       fill: white,
       // label: [net1\ 192.168.1.0/24],
-      shape: cloud.with(label: [net1\ 192.168.1.0/24]),
+      shape: cloud.with(label: [net1\ 192.168.1.0/24], label-pos: right),
     ),
     edge(<s1>, <c1>),
-    edge(<s2>, <c2>),
+    edge(<s1>, <c2>),
+    edge(<s2>, <srv1>),
+    edge(<s2>, <srv2>),
     edge(<r1>, <s1>),
-    edge(<r1>, <s2>),
-    edge(<r1>, <s3>, dash: "dashed"),
+    edge(<s1>, <s2>),
+    edge(<r1>, <ap>, dash: "dashed"),
   )
 }
 #ex(true)
 #ex(false)
 
+#let node = node.with(width: 4em, height: 4em)
 #let (
   monitor,
   router,
@@ -53,7 +60,7 @@
   l3-switch,
   server,
   cloud,
-) = fletcher-shapes(flat: false)
+) = fletcher-shapes(flat: true)
 
 #diagram(
   node-stroke: blue,
@@ -71,11 +78,23 @@
   edge((-0.5, 0.5), (2.5, 0.5)),
 )
 
+#let (
+  monitor,
+  router,
+  switch,
+  l3-switch,
+  server,
+  cloud,
+) = fletcher-shapes(flat: false)
+
+#let dr = router.with(detail: "DR")
+#let bdr = router.with(detail: "BDR")
+#let drother = router.with(detail: text(size: .7em)[DROTHER])
 #diagram(
   node-stroke: blue,
   node-fill: white,
-  node((1, 0), shape: router.with(detail: "DR"), name: <c1>),
-  node((2, 1), shape: router.with(detail: "BDR"), name: <c2>),
+  node((1, 0), shape: dr, name: <c1>),
+  node((2, 1), shape: bdr, name: <c2>),
   node((0, 1), shape: router, name: <c3>),
   node((1.5, 2), shape: router, name: <c4>),
   node((0.5, 2), shape: router, name: <c5>),
@@ -90,21 +109,21 @@
 #diagram(
   node-stroke: blue,
   node-fill: white,
-  node((1, 0), shape: router.with(detail: "DR"), name: <c1>),
-  node((2, 1), shape: router.with(detail: "BDR"), name: <c2>),
+  node((1, 0), shape: dr, name: <c1>),
+  node((2, 1), shape: bdr, name: <c2>),
   node(
     (0, 1),
-    shape: router.with(detail: text(size: .7em)[DROTHER]),
+    shape: drother,
     name: <c3>,
   ),
   node(
     (1.5, 2),
-    shape: router.with(detail: text(size: .7em)[DROTHER]),
+    shape: drother,
     name: <c4>,
   ),
   node(
     (0.5, 2),
-    shape: router.with(detail: text(size: .7em)[DROTHER]),
+    shape: drother,
     name: <c5>,
   ),
   edge(<c1>, <c2>, "<|--|>", label: "full"),

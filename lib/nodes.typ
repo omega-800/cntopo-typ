@@ -139,13 +139,25 @@
         fill: fill,
         stroke: stroke,
       )
+      cetz.draw.line(
+        (-sx / 2, sy),
+        (sx / 2, sy),
+        (sx, 0),
+        (sx / 2, -sy),
+        (-sx / 2, -sy),
+        (-sx, 0),
+        (-sx / 2, sy),
+        fill: fill,
+        stroke: stroke,
+      )
+    } else {
+      cetz.draw.polygon(
+        (0, 0),
+        6,
+        stroke: stroke,
+        fill: fill,
+      )
     }
-    cetz.draw.polygon(
-      (0, 0),
-      6,
-      stroke: stroke,
-      fill: fill,
-    )
   },
   "square": (sx, sy, radius, stroke, fill, flat) => {
     if not flat {
@@ -255,11 +267,21 @@
   cetz.draw.group({
     cetz.draw.set-origin((x, y))
     if wireless {
+      let hs = (
+        sy
+          * (
+            if flat {
+              if shape == "square" { .5 } else if shape == "circle" {
+                .25
+              } else { .1 }
+            } else { 0 }
+          )
+      )
       if is-circle {
-        antennas((0, 0), (sx, sy), stroke: stroke-to-paint(stroke))
+        antennas((0, hs), (sx, sy), stroke: stroke-to-paint(stroke))
       } else {
         antennas(
-          (sx * 1 / 4, 0),
+          (if flat { 0 } else { sx * 1 / 4 }, hs),
           (sx, sy),
           stroke: stroke-to-paint(stroke),
           spacing: sx,
@@ -276,49 +298,23 @@
         })
       })
     })
-
-    // TODO: label-pos
-    // FIXME: label absolute gap instead of relative
-    if label != none {
-      let x = if label-pos.x == none {
-        if flat or is-circle { 0 } else if label-pos.y == top {
-          sx * 1 / 5
-        } else {
-          -sx * 1 / 5
-        }
-      } else if label-pos.x == left { -sx } else { sx }
-      let y = if label-pos.y == none {
-        0
-      } else {
-        (
-          // FIXME: should be relative to label, not icon size
-          (if flat { sy * 6 / 5 } else { sy * 4 / 5 })
-            * (if label-pos.y == top { 1 } else { -1 })
-        )
-      }
-      let pos = (x, y)
-      // let pos = if flat {
-      //   (0, -sy * 6 / 5)
-      // } else {
-      //   (if is-circle { 0 } else { -sx * 1 / 5 }, -sy)
-      // }
-      let anchor-y = if label-pos.y == top {
-        "south"
-      } else if label-pos.y == bottom { "north" } else { none }
-      let anchor-x = if label-pos.x == left {
-        "east"
-      } else if label-pos.x == right { "west" } else { none }
-      // TODO: proper anchor
-      cetz.draw.content(pos, label, anchor: if anchor-y != none {
-        anchor-y
-      } else { anchor-x })
-    }
+    draw-lbl(label, label-pos, sx, sy, flat: flat, is-circle: is-circle)
 
     if detail != none {
       let pos = if flat {
-        (0, -sy * 11 / 16)
+        (
+          0,
+          if shape == "rect" { -sy * 3 / 8 } else if shape == "hex" {
+            -sy * 9 / 16
+          } else { -sy * 11 / 16 },
+        )
       } else {
-        (if is-circle { 0 } else { -sx / 4 }, -sy * 3 / 8)
+        (
+          if is-circle { 0 } else if shape == "rect" { -sx / 5 } else {
+            -sx / 4
+          },
+          if shape == "rect" { -sy / 4 } else { -sy * 3 / 8 },
+        )
       }
       if type(detail) == str and detail in node-details {
         cetz.draw.group({

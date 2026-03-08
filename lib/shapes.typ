@@ -175,13 +175,17 @@
     (xo, yo - yi),
     (xo, 0),
   )
+
   cetz.draw.group({
-    cetz.draw.set-origin((x - spacing, y + sy * 1 / 3))
-    ln
-  })
-  cetz.draw.group({
-    cetz.draw.set-origin((x + spacing, y + sy * 1 / 3))
-    ln
+    cetz.draw.set-origin((x, y + sy * 1 / 3))
+    cetz.draw.group({
+      cetz.draw.set-origin((-spacing, 0))
+      ln
+    })
+    cetz.draw.group({
+      cetz.draw.set-origin((spacing, 0))
+      ln
+    })
   })
 }
 
