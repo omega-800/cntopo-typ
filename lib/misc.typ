@@ -180,9 +180,9 @@
       stroke: stroke,
       fill: fill-i,
     )
-    top(fill, (1, .6))
+    top(fill, (.99, .41))
     top(stroke, 1)
-    top(stroke, .6)
+    top(stroke, .4)
     draw-lbl(label, label-pos, sx, sy)
   })
 }

@@ -5,8 +5,13 @@
 
 #let ex = flat => {
   let (server, monitor, switch, router, l3-switch, cloud, w-dual-ap) = fletcher-shapes(
+    stroke: blue.lighten(50%),
+    stroke-inner: white,
+    fill: blue,
+    fill-inner: white,
     flat: flat,
   )
+  let cloud = cloud.with(override-color: true)
   let node = node.with(width: 6em, height: 6em)
   diagram(
     node-stroke: orange,

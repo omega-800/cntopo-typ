@@ -175,7 +175,6 @@
         stroke: stroke,
         (sx, -sy, 1),
         (sx, -sy, 0),
-        (-sx, 0, 0),
       )
     }
 
@@ -203,7 +202,6 @@
         stroke: stroke,
         (sx, -sy * 2 / 3, 1),
         (sx, -sy * 2 / 3, 0),
-        (-sx, 0, 0),
       )
     }
 
@@ -304,7 +302,7 @@
       let pos = if flat {
         (
           0,
-          if shape == "rect" { -sy * 3 / 8 } else if shape == "hex" {
+          if shape == "rect" { -sy * 5 / 8 } else if shape == "hex" {
             -sy * 9 / 16
           } else { -sy * 11 / 16 },
         )
@@ -313,7 +311,9 @@
           if is-circle { 0 } else if shape == "rect" { -sx / 5 } else {
             -sx / 4
           },
-          if shape == "rect" { -sy / 4 } else { -sy * 3 / 8 },
+          if shape == "rect" { -sy / 4 } else if shape == "square" {
+            -sy * 11 / 32
+          } else { -sy * 3 / 8 },
         )
       }
       if type(detail) == str and detail in node-details {
