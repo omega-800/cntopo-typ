@@ -11,7 +11,7 @@
   sx,
   sy,
   flat: true,
-  is-circle: false
+  is-circle: false,
 ) => if label != none {
   // FIXME: label absolute gap instead of relative
   let x = if label-pos.x == none {
@@ -31,11 +31,6 @@
     )
   }
   let pos = (x, y)
-  // let pos = if flat {
-  //   (0, -sy * 6 / 5)
-  // } else {
-  //   (if is-circle { 0 } else { -sx * 1 / 5 }, -sy)
-  // }
   let anchor-y = if label-pos.y == top {
     "south"
   } else if label-pos.y == bottom { "north" } else { none }
@@ -48,15 +43,38 @@
   } else { anchor-x })
 }
 
+// FIXME: fletcher doesn't provide x,y pos
+// #let to-3d = (x, y, circle) => {
+// let (yn, xn) = if circle { (0, 1) } else { (1 / 4, 3 / 4) }
+// let mat = (
+//   (xn, yn, 0, x),
+//   (0, -3 / 8, 1 / 2, -y - 1 / 4),
+//   (0, 0, 1, 0),
+//   (0, 0, 0, 1),
+// )
+// cetz.draw.set-transform(mat)
+// }
+
+// FIXME: oh the ugliness
 #let to-3d = (flat, shape, c) => {
-  let circle = shape == "hex" or shape == "circle"
   let off = if shape == "rect" { 1.08 } else { 1 }
-  if flat { c } else if circle {
+  if flat { c } else if shape == "hex" or shape == "circle" {
     cetz.draw.translate(y: .25)
     cetz.draw.scale(y: 64%)
     cetz.draw.ortho(
       x: 60deg,
       y: 0deg,
+      z: 0deg,
+      sorted: false,
+      c,
+    )
+  } else if shape == "bridge" or shape == "firewall" {
+    cetz.draw.translate(x: -.15, y: -.1)
+    cetz.draw.scale(x: 82%, y: 64%)
+    cetz.draw.rotate(x: 0deg, y: 9deg)
+    cetz.draw.ortho(
+      x: -20deg,
+      y: -20deg,
       z: 0deg,
       sorted: false,
       c,
@@ -75,17 +93,6 @@
   }
 }
 
-// FIXME: fletcher doesn't provide x,y pos
-// #let to-3d = (x, y, circle) => {
-// let (yn, xn) = if circle { (0, 1) } else { (1 / 4, 3 / 4) }
-// let mat = (
-//   (xn, yn, 0, x),
-//   (0, -3 / 8, 1 / 2, -y - 1 / 4),
-//   (0, 0, 1, 0),
-//   (0, 0, 0, 1),
-// )
-// cetz.draw.set-transform(mat)
-// }
 #let stroke-to-paint = s => if type(s) == stroke { s.paint } else { s }
 #let to-stroke = s => if type(s) == stroke { s } else { (paint: s) }
 #let override-stroke = (s, ..o) => {
@@ -117,5 +124,10 @@
   },
 )
 
+// TODO: 
+/// Default stroke
+/// -> stroke
 #let stroke-def = black + 2pt
+/// Default fill
+/// -> paint
 #let fill-def = white

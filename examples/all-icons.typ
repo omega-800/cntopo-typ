@@ -28,7 +28,7 @@
           .enumerate()
           .map(((x, (k, v))) => v(
             ((w - x) * 2 - 1, (h - y) * 3 - 2),
-            label: k,
+            label: box(fill: white)[#k],
           )))
         .flatten()
     })

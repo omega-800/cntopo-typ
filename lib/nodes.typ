@@ -1,235 +1,126 @@
 #import "util.typ": *
-#import "shapes.typ": *
 #import "misc.typ": *
+#import "node-class.typ": *
+#import "node-detail.typ": *
+#import "node-shape.typ": *
 
-#let node-classes = (
-  "router": (sx, sy, stroke, fill) => {
-    let arrs = (sx * 0.65, sy * 0.4)
-    let arr = arrow.with(stroke: stroke, fill: fill)
-
-    cetz.draw.rotate(45deg)
-    arr((sx / 2, 0), arrs)
-    cetz.draw.rotate(90deg)
-    arr((-sx / 2, 0), arrs)
-    cetz.draw.rotate(90deg)
-    arr((sx / 2, 0), arrs)
-    cetz.draw.rotate(90deg)
-    arr((-sx / 2, 0), arrs)
-  },
-  "switch": (sx, sy, stroke, fill) => {
-    let arrs = (sx * 0.75, sy * 0.4)
-    let arr = arrow.with(stroke: stroke, fill: fill)
-
-    arr((sx * 0.5, sy * 0.6), arrs)
-    arr((sx * 0.25, -sy * 0.2), arrs)
-    cetz.draw.rotate(180deg)
-    arr((sx * 0.5, sy * 0.6), arrs)
-    arr((sx * 0.25, -sy * 0.2), arrs)
-    cetz.draw.rotate(135deg)
-  },
-  "hub": (sx, sy, stroke, fill) => {
-    arrows((0, 0), (sx * 1.6, sy), stroke: stroke, fill: fill, type: "two")
-  },
-  "fe-hub": (sx, sy, stroke, fill) => {
-    // TODO: standardized licon sizes
-    arrow((0, 0), (sx * 1.6, sy), stroke: stroke, fill: fill)
-  },
-  "l3-switch": (sx, sy, stroke, fill) => {
-    let arrs = (sx * 0.5, sy * 0.3)
-    let arrp = (sx * 0.6, 0)
-    let arr = arrow.with(stroke: stroke, fill: fill)
-
-    cetz.draw.circle(
-      (0, 0),
-      radius: (sx * 0.35, sy * 0.35),
-      stroke: stroke,
-      fill: fill,
-    )
-    arr(arrp, arrs)
-    cetz.draw.rotate(45deg)
-    arr(arrp, arrs)
-    cetz.draw.rotate(45deg)
-    arr(arrp, arrs)
-    cetz.draw.rotate(45deg)
-    arr(arrp, arrs)
-    cetz.draw.rotate(45deg)
-    arr(arrp, arrs)
-    cetz.draw.rotate(45deg)
-    arr(arrp, arrs)
-    cetz.draw.rotate(45deg)
-    arr(arrp, arrs)
-    cetz.draw.rotate(45deg)
-    arr(arrp, arrs)
-  },
-  "ap": (sx, sy, stroke, fill) => {
-    wireless-wave((0, -sy * 2 / 7), (sx * 0.8, sy * .1), stroke: stroke)
-  },
-  "dual-ap": (sx, sy, stroke, fill) => {
-    wireless-wave((0, -sy * 2 / 7), (sx * 0.8, sy * .1), stroke: stroke)
-    wireless-wave((0, sy * 2 / 7), (sx * 0.8, sy * .1), stroke: stroke)
-  },
-  "mesh-ap": (sx, sy, stroke, fill) => {
-    cetz.draw.content((0, sy * 2 / 7), text(
-      fill: stroke-to-paint(stroke),
-      // weight: "bold",
-      // TODO: dynamic font size
-      size: 2em,
-      // FIXME: skew text?
-    )[MESH])
-    wireless-wave((0, -sy * 2 / 7), (sx * 0.8, sy * .1), stroke: stroke)
-  },
-)
-#let node-details = (
-  "secure": (sx, sy, stroke-i, fill-i, stroke, fill) => {
-    lock(
-      (0, 0),
-      (sx, sy),
-      stroke: fill,
-      fill: fill-i,
-      stroke-inner: stroke-i,
-      fill-inner: fill,
-    )
-  },
-  "cloud": (sx, sy, stroke-i, fill-i, stroke, fill) => {
-    cloud(
-      (0, 0),
-      (sx, sy),
-      stroke: fill,
-      fill: fill-i,
-      stroke-inner: stroke-i,
-      fill-inner: fill,
-    )
-  },
-)
-#let node-containers = (
-  "circle": (sx, sy, radius, stroke, fill, flat) => {
-    if not flat {
-      cetz.draw.circle(
-        (0, 0, 1),
-        radius: (sx, sy),
-        stroke: stroke,
-        fill: fill,
-      )
-      cetz.draw.line(
-        (sx, sy * 1 / 8, 1),
-        (sx, 0, 0),
-        (-sx, 0, 0),
-        (-sx, sy * 1 / 8, 1),
-        fill: fill,
-        stroke: stroke,
-      )
-    }
-    cetz.draw.circle(
-      (0, 0),
-      radius: (sx, sy),
-      stroke: stroke,
-      fill: fill,
-    )
-  },
-  "hex": (sx, sy, radius, stroke, fill, flat) => {
-    if not flat {
-      cetz.draw.line(
-        (-sx, 0, 0),
-        (-sx, 0, 1),
-        (-sx, sy * 1 / 8, 1),
-        (-sx / 2, -sy, 1),
-        (sx / 2, -sy, 1),
-        (sx, sy * 1 / 8, 1),
-        (sx, 0, 0),
-        fill: fill,
-        stroke: stroke,
-      )
-      cetz.draw.line(
-        (-sx / 2, sy),
-        (sx / 2, sy),
-        (sx, 0),
-        (sx / 2, -sy),
-        (-sx / 2, -sy),
-        (-sx, 0),
-        (-sx / 2, sy),
-        fill: fill,
-        stroke: stroke,
-      )
-    } else {
-      cetz.draw.polygon(
-        (0, 0),
-        6,
-        stroke: stroke,
-        fill: fill,
-      )
-    }
-  },
-  "square": (sx, sy, radius, stroke, fill, flat) => {
-    if not flat {
-      cetz.draw.line(
-        (sx, sy, 0),
-        (sx, sy, 1),
-        (sx, -sy, 1),
-        (-sx, -sy, 1),
-        (-sx, -sy, 0),
-        (-sx, 0, 0),
-        fill: fill,
-        stroke: stroke,
-      )
-      cetz.draw.line(
-        stroke: stroke,
-        (sx, -sy, 1),
-        (sx, -sy, 0),
-      )
-    }
-
-    cetz.draw.rect(
-      (-sx, -sy),
-      (sx, sy),
-      stroke: stroke,
-      fill: fill,
-      radius: radius,
-    )
-  },
-  "rect": (sx, sy, radius, stroke, fill, flat) => {
-    if not flat {
-      cetz.draw.line(
-        (sx, sy * 2 / 3, 0),
-        (sx, sy * 2 / 3, 1),
-        (sx, -sy * 2 / 3, 1),
-        (-sx, -sy * 2 / 3, 1),
-        (-sx, -sy * 2 / 3, 0),
-        (-sx, 0, 0),
-        fill: fill,
-        stroke: stroke,
-      )
-      cetz.draw.line(
-        stroke: stroke,
-        (sx, -sy * 2 / 3, 1),
-        (sx, -sy * 2 / 3, 0),
-      )
-    }
-
-    cetz.draw.rect(
-      (-sx, -sy * 2 / 3),
-      (sx, sy * 2 / 3),
-      stroke: stroke,
-      fill: fill,
-      radius: radius,
-    )
-  },
-)
-
-#let node = (
+/// Node
+///
+/// ```example
+/// #cetz.canvas({
+///   node((0,0), (2,2), class: "l3-switch")
+/// })
+/// ```
+#let node(
+  /// The position (and size)
+  /// -> (x, y) | (x, y), (w, h)
   ..pos,
+  /// Icon outer stroke
+  ///
+  /// If @node.stroke-inner and/or @node.fill-inner are set to `auto`, then this will apply to them as well.
+  /// ```example
+  /// #cetz.canvas({
+  ///   node((0,0), class: "router", stroke: red)
+  ///   node((2,0), class: "router", stroke: red, stroke-inner: black, fill-inner: black)
+  /// })
+  /// ```
+  /// -> stroke
   stroke: stroke-def,
+  /// Icon main fill
+  /// ```example
+  /// #cetz.canvas({
+  ///   node(fill: red, class: "router")
+  /// })
+  /// ```
+  /// -> paint
   fill: fill-def,
+  /// Icon inner stroke
+  /// ```example
+  /// #cetz.canvas({
+  ///   node(stroke-inner: red, class: "router")
+  /// })
+  /// ```
+  /// -> stroke | auto
   stroke-inner: auto,
+  /// Icon inner fill
+  /// ```example
+  /// #cetz.canvas({
+  ///   node(fill-inner: red, class: "router")
+  /// })
+  /// ```
+  /// -> paint | auto
   fill-inner: auto,
+  /// If the icon should be flat or 3d
+  /// ```example
+  /// #cetz.canvas({
+  ///   node((0,0), flat: true, class: "router")
+  ///   node((2,0), flat: false, class: "router")
+  /// })
+  /// ```
+  /// -> bool
   flat: true,
-  detail: none,
+  /// Label
+  /// ```example
+  /// #cetz.canvas({
+  ///   node(label: "R1", class: "router")
+  /// })
+  /// ```
+  /// -> str | content | none
   label: none,
+  /// Label position
+  /// ```example
+  /// #cetz.canvas({
+  ///   node(label: "R2", label-pos: top, class: "router")
+  /// })
+  /// ```
+  /// -> alignment
   label-pos: bottom,
-  class: "router",
+  /// Secondary node icon / text
+  /// ```example
+  /// #cetz.canvas({
+  ///   node((0,0), detail: "secure", class: "router")
+  ///   node((2,0), detail: [R3], flat: false, class: "router")
+  /// })
+  /// ```
+  /// -> "secure" | "cloud" | content | none
+  detail: none,
+  /// Main node icon
+  /// ```example
+  /// #cetz.canvas({
+  ///   node(class: polygon.regular(size: 20pt, vertices: 6))
+  ///   node((2,0), class: "hub", flat: false)
+  /// })
+  /// ```
+  /// -> "router" | "switch" | "hub" | "fe-hub" | "l3-switch" | "ap" | "dual-ap" | "mesh-ap" | content | none
+  class: none,
+  /// Node shape
+  /// ```example
+  /// #cetz.canvas({
+  ///   node(shape: "firewall")
+  ///   node((2, 0), class: "dual-ap", shape: auto)
+  /// })
+  /// ```
+  /// -> "circle" | "hex" | "square" | "rect" | "bridge" | "firewall" | auto
   shape: auto,
+  /// Node radius.
+  ///
+  /// Only works on the shapes `square` or `rect`
+  /// ```example
+  /// #cetz.canvas({
+  ///   node(shape: "square", radius: 20%, class: "router")
+  /// })
+  /// ```
+  /// -> int | float | relative | auto
   radius: auto,
+  /// If the wireless antennas should be added
+  /// ```example
+  /// #cetz.canvas({
+  ///   node(wireless: true, class: "router")
+  /// })
+  /// ```
+  /// -> bool
   wireless: false,
-) => {
+) = {
   let ((x, y), (sx, sy)) = resolve-pos(pos.pos(), (1, 1))
   let (stroke-i, fill-i) = resolve-style(
     stroke,
@@ -242,17 +133,27 @@
   } else { radius }
 
   let shape = if shape == auto {
-    if class == "router" {
-      // FIXME: janky api
+    if type(class) != str or class not in node-classes { "circle" } else if (
+      "bridge" in class
+    ) {
+      "bridge"
+    } else if (
+      class == "router"
+    ) {
       if detail == "wavelength" { "hex" } else { "circle" }
-    } else if class.ends-with("ap") { "rect" } else { "square" }
+    } else if class.ends-with("ap") {
+      "rect"
+    } else { "square" }
   } else { shape }
 
   let is-circle = shape == "hex" or shape == "circle"
   let (sx-i, sy-i) = if detail != none and flat {
-    // TODO: do not transform switch arrows
     (
-      if class == "switch" or class.ends-with("hub") or class.ends-with("ap") {
+      if class == "switch"
+        or (
+          type(class) == str
+            and (class.ends-with("hub") or class.ends-with("ap"))
+        ) {
         sx
       } else { sx * 3 / 4 },
       sy * 3 / 4,
@@ -269,7 +170,9 @@
         sy
           * (
             if flat {
-              if shape == "square" { .5 } else if shape == "circle" {
+              if shape == "square" or shape == "firewall" { .5 } else if (
+                shape == "circle"
+              ) {
                 .25
               } else { .1 }
             } else { 0 }
@@ -286,29 +189,85 @@
         )
       }
     }
+
+    let eval-shape = s => if type(s) == function {
+      shape(sx, sy, radius, stroke, fill, flat)
+    } else if (type(s) == str and s in node-shapes) {
+      node-shapes.at(s)(sx, sy, radius, stroke, fill, flat)
+    } else { s }
+
+    let eval-class-detail = (c, is-class) => {
+      let size = eval-c => if not is-class {
+        (
+          sx * .2,
+          sy * .2,
+        )
+      } else if not eval-c {
+        (
+          sx-i * .75,
+          sy-i * .75,
+        )
+      } else {
+        (
+          sx-i,
+          sy-i,
+        )
+      }
+      let eval-class = cc => node-classes.at(cc)(
+        ..size(true),
+        stroke-i,
+        fill-i,
+      )
+      let eval-details = cc => node-details.at(cc)(
+        ..size(false),
+        fill,
+        fill-i,
+      )
+
+      if type(c) == str and is-class and c in node-classes {
+        eval-class(c)
+      } else if type(c) == str and is-class and c in node-details {
+        eval-details(c)
+      } else if type(c) == str and not is-class and c in node-details {
+        eval-details(c)
+      } else if type(c) == str and not is-class and c in node-classes {
+        eval-class(c)
+      } else if c != none {
+        cetz.draw.content(
+          (0, 0),
+          text(fill: fill-i, weight: "bold", c),
+        )
+      }
+    }
+
     cetz.draw.group({
       // if not flat { to-3d(x, y, is-circle) }
       to-3d(flat, shape, {
-        node-containers.at(shape)(sx, sy, radius, stroke, fill, flat)
-        cetz.draw.group({
-          cetz.draw.set-origin((0, off-i))
-          node-classes.at(class)(sx-i, sy-i, stroke-i, fill-i)
-        })
+        eval-shape(shape)
+        if class != none {
+          cetz.draw.group({
+            cetz.draw.set-origin((0, off-i))
+            eval-class-detail(class, true)
+          })
+        }
       })
     })
+
     draw-lbl(label, label-pos, sx, sy, flat: flat, is-circle: is-circle)
 
     if detail != none {
       let pos = if flat {
         (
           0,
-          if shape == "rect" { -sy * 5 / 8 } else if shape == "hex" {
+          if shape == "rect" { -sy * 3 / 8 } else if shape == "hex" {
             -sy * 9 / 16
           } else { -sy * 11 / 16 },
         )
       } else {
         (
-          if is-circle { 0 } else if shape == "rect" { -sx / 5 } else {
+          if is-circle { 0 } else if shape == "rect" or shape == "bridge" {
+            -sx / 5
+          } else {
             -sx / 4
           },
           if shape == "rect" { -sy / 4 } else if shape == "square" {
@@ -316,55 +275,10 @@
           } else { -sy * 3 / 8 },
         )
       }
-      if type(detail) == str and detail in node-details {
-        cetz.draw.group({
-          cetz.draw.set-origin(pos)
-          node-details.at(detail)(
-            sx * .2,
-            sy * .2,
-            stroke-i,
-            fill-i,
-            stroke,
-            fill,
-          )
-        })
-      } else if type(detail) == str and detail in node-classes {
-        cetz.draw.group({
-          cetz.draw.set-origin(pos)
-          node-classes.at(detail)(sx * .25, sy * .25, stroke-i, fill-i)
-        })
-      } else {
-        cetz.draw.content(
-          pos,
-          text(fill: fill-i, weight: "bold", detail),
-        )
-      }
+      cetz.draw.group({
+        cetz.draw.set-origin(pos)
+        eval-class-detail(detail, false)
+      })
     }
   })
 }
-
-// type: "default" | "atm" | "wl"
-#let router = node.with(class: "router")
-
-// type: "default" | "atm" | "isdn" | "workgroup"
-#let switch = node.with(class: "switch")
-
-#let l3-switch = node.with(class: "l3-switch")
-
-#let bridge = (
-  ..pos,
-  stroke: stroke-def,
-  fill: fill-def,
-  stroke-inner: auto,
-  fill-inner: auto,
-  flat: true,
-) => {}
-
-#let firewall = (
-  ..pos,
-  stroke: stroke-def,
-  fill: fill-def,
-  stroke-inner: auto,
-  fill-inner: auto,
-  flat: true,
-) => {}

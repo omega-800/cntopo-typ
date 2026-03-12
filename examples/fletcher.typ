@@ -1,4 +1,4 @@
-#import "../lib/main.typ": cetz, fletcher-shapes, wireless-wave-link
+#import "../lib/main.typ": cetz, fletcher-shapes
 #import "@preview/fletcher:0.5.8" as fletcher: diagram, edge, node
 
 #set text(font: "FreeSans")
@@ -43,7 +43,7 @@
       inset: 5em,
       fill: white,
       // label: [net1\ 192.168.1.0/24],
-      shape: cloud.with(label: [net1\ 192.168.1.0/24], label-pos: right),
+      shape: cloud.with(label: [net1\ 192.168.0.0/24], label-pos: right),
     ),
     edge(<s1>, <c1>),
     edge(<s1>, <c2>),

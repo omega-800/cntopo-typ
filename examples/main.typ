@@ -1,5 +1,5 @@
 #import "../lib/main.typ": (
-  cetz, cloud2, icons, to-fletcher-shapes, wireless-wave,
+  cetz, icons, to-fletcher-shapes, wireless-wave,
 )
 #import "@preview/fletcher:0.5.8" as fletcher: diagram, edge, node
 

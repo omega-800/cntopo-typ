@@ -1,12 +1,36 @@
 #import "util.typ": *
 
+/// Cloud
+///
+/// ```example
+/// #cetz.canvas({
+///   cloud(label: "WAN")
+/// })
+/// ```
 #let cloud = (
+  /// The position (and size)
+  /// -> (x, y) | (x, y), (w, h)
   ..pos,
+  /// Icon outer stroke
+  /// -> stroke
   stroke: stroke-def,
+  /// Icon main fill
+  /// -> paint
   fill: fill-def,
+  /// Icon inner stroke
+  /// -> stroke | auto
   stroke-inner: auto,
+  /// Icon inner fill
+  /// -> paint | auto
   fill-inner: auto,
+  /// Not implemented yet
+  /// -> bool
+  flat: true,
+  /// Label
+  /// -> str | content | none
   label: none,
+  /// Label position
+  /// -> alignment
   label-pos: bottom,
 ) => {
   let ((x, y), (sx, sy)) = resolve-pos(pos.pos(), (1, 0.75))
@@ -55,57 +79,39 @@
   })
 }
 
-#let cloud2 = (
+/// Lock
+///
+/// ```example
+/// #cetz.canvas({
+///   lock(label: "Don't even try")
+/// })
+/// ```
+#let lock(
+  /// The position (and size)
+  /// -> (x, y) | (x, y), (w, h)
   ..pos,
+  /// Icon outer stroke
+  /// -> stroke
   stroke: stroke-def,
+  /// Icon main fill
+  /// -> paint
   fill: fill-def,
+  /// Icon inner stroke
+  /// -> stroke | auto
   stroke-inner: auto,
+  /// Icon inner fill
+  /// -> paint | auto
   fill-inner: auto,
-) => {
-  let ((x, y), (sx, sy)) = resolve-pos(pos.pos(), (1, 1))
-  // let y = y + sy / 3
-  let yoff = sy / 3
-  cetz.draw.group({
-    cetz.draw.set-origin((x, y))
-    cetz.draw.merge-path(stroke: stroke, fill: fill, {
-      cetz.draw.line((-sx * 0.75, yoff - sy), (sx * 0.75, yoff - sy))
-      cetz.draw.arc(
-        (sx * 0.75, yoff - sy),
-        start: -90deg,
-        delta: 180deg,
-        radius: sx / 4,
-      )
-      cetz.draw.arc(
-        (sx * 0.75, yoff - sy / 2),
-        start: -35deg,
-        delta: 200deg,
-        radius: sx / 2,
-      )
-      cetz.draw.arc(
-        (-sx * 0.15, yoff - sy * 0.15),
-        start: 35deg,
-        delta: 180deg,
-        radius: sx / 3,
-      )
-      cetz.draw.arc(
-        (-sx * 0.75, yoff - sy / 2),
-        start: 90deg,
-        delta: 180deg,
-        radius: sx / 4,
-      )
-    })
-  })
-}
-
-#let lock = (
-  ..pos,
-  stroke: stroke-def,
-  fill: fill-def,
-  stroke-inner: auto,
-  fill-inner: auto,
+  /// Not implemented yet
+  /// -> bool
+  flat: true,
+  /// Label
+  /// -> str | content | none
   label: none,
+  /// Label position
+  /// -> alignment
   label-pos: bottom,
-) => {
+) = {
   let ((x, y), (sx, sy)) = resolve-pos(pos.pos(), (1, 1))
   let (stroke-i, fill-i) = resolve-style(
     stroke,
@@ -124,7 +130,7 @@
         fill: if to == none { none } else { stroke-to-paint(s) },
         {
           cetz.draw.line(
-            (sx / 2 * from, sy / 4),
+            (sx / 2 * from, sy / 4 * .95),
             (sx / 2 * from, sy / 2),
           )
           cetz.draw.arc(
@@ -135,11 +141,11 @@
           )
           cetz.draw.line(
             (-sx / 2 * from, sy / 2),
-            (-sx / 2 * from, sy / 4),
+            (-sx / 2 * from, sy / 4 * .95),
           )
           if to != none {
             cetz.draw.line(
-              (-sx / 2 * to, sy / 4),
+              (-sx / 2 * to, sy / 4 * .9),
               (-sx / 2 * to, sy / 2),
             )
             cetz.draw.arc(
@@ -150,7 +156,7 @@
             )
             cetz.draw.line(
               (sx / 2 * to, sy / 2),
-              (sx / 2 * to, sy / 4),
+              (sx / 2 * to, sy / 4 * .9),
               (sx / 2 * from, sy / 4),
             )
           }
@@ -186,19 +192,3 @@
     draw-lbl(label, label-pos, sx, sy)
   })
 }
-
-#let globe = (
-  ..pos,
-  stroke: stroke-def,
-  fill: fill-def,
-  stroke-inner: auto,
-  fill-inner: auto,
-) => {}
-
-#let shield = (
-  ..pos,
-  stroke: stroke-def,
-  fill: fill-def,
-  stroke-inner: auto,
-  fill-inner: auto,
-) => {}
