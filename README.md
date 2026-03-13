@@ -1,14 +1,12 @@
 # cntopo-typ
 
-## icons showcase
+A modular set of CeTZ-powered computer network topology icons with Fletcher integration.
 
-./examples/all-icons.pdf
+## Overview
 
-## examples 
+`cntopo-typ` is a collection of computer network topology icons, designed to be easy to use, extensible and work well with existing frameworks like CeTZ or Fletcher. The two main functions it provides are `fletcher-shapes` and `icons`, yielding all of the icons for use with Fletcher and CeTZ respectively. Both are parametarized the same way, as well as most of the icons in this package. All `node` icons are provided with 2d (`flat: true`) and 3d (`flat: false`) variants.
 
-./examples/main.pdf
-
-## usage
+## Usage
 
 ```typst
 #import "@preview/cntopo:0.1.0": cetz, icons
@@ -119,3 +117,8 @@
 ```
 
 ![example 3](https://raw.githubusercontent.com/omega-800/cntopo-typ/refs/heads/main/examples/readme-ex-3.svg)
+
+## More examples
+
+- [Icons showcase](https://raw.githubusercontent.com/omega-800/cntopo-typ/refs/heads/main/examples/all-icons.pdf)
+- [Fletcher integration](https://raw.githubusercontent.com/omega-800/cntopo-typ/refs/heads/main/examples/fletcher.pdf)
