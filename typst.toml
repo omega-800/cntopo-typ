@@ -1,12 +1,12 @@
 [package]
 name = "cntopo"
-version = "0.0.1"
+version = "0.1.0"
 authors = [ "Georgiy Shevoroshkin <gshevoroshkin@proton.me>" ]
-license = "The Happy Bunny License (Modified MIT License)"
+license = "MIT"
 description = "Computer network topology icons for cetz or fletcher"
 repository = "https://github.com/omega-800/cntopo-typ.git"
 categories = [ "visualization" ]
-keywords = [ "plot", "graph" ]
+keywords = [ "network", "graph", "topology" ]
 entrypoint = "lib/main.typ"
 compiler = "0.14.0"
-exclude = [ "examples/*" ]
+exclude = [ "examples", ".github", "docs", "flake.nix", "flake.lock", "TODO.md", ".envrc" ]

@@ -11,7 +11,7 @@
 ## usage
 
 ```typst
-#import "@preview/cntopo:0.0.1": cetz, icons
+#import "@preview/cntopo:0.1.0": cetz, icons
 
 #let ip = text.with(font: "FreeMono", weight: "bold")
 
@@ -39,7 +39,7 @@
 ![example 1](https://raw.githubusercontent.com/omega-800/cntopo-typ/refs/heads/main/examples/readme-ex-1.svg)
 
 ```typst
-#import "@preview/cntopo:0.0.1": cetz, icons
+#import "@preview/cntopo:0.1.0": cetz, icons
 
 #let (
   router,
@@ -74,7 +74,7 @@
 
 
 ```typst
-#import "@preview/cntopo:0.0.1": cetz, fletcher-shapes
+#import "@preview/cntopo:0.1.0": cetz, fletcher-shapes
 #import "@preview/fletcher:0.5.8" as fletcher: diagram, edge, node
 
 #set text(font: "FreeSans")
