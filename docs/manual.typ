@@ -1,5 +1,5 @@
 #import "util.typ": *
-#import "../lib/main.typ": cetz, fletcher-shapes, icons
+#import "/src/main.typ": cetz, fletcher-shapes, icons
 #import "@preview/fletcher:0.5.8" as fletcher: diagram, edge, node
 
 #show link: underline.with(stroke: 1pt + blue.lighten(70%))

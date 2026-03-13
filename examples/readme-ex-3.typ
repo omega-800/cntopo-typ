@@ -1,4 +1,4 @@
-#import "../lib/main.typ": cetz, fletcher-shapes
+#import "/src/main.typ": cetz, fletcher-shapes
 #import "@preview/fletcher:0.5.8" as fletcher: diagram, edge, node
 
 #set page(height: 38em, width: 45em)

@@ -41,7 +41,7 @@
             src = toSource {
               root = ./.;
               fileset = unions [
-                ./lib
+                ./src
                 ./typst.toml
               ];
             };

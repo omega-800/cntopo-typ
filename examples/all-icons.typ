@@ -1,4 +1,4 @@
-#import "../lib/main.typ": cetz, icons
+#import "/src/main.typ": cetz, icons
 #set text(font: "FreeSans")
 
 #let icon-set = icons(

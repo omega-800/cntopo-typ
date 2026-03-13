@@ -1,10 +1,10 @@
 #import "@preview/tidy:0.4.3"
-#import "/lib/main.typ" as cntopo
+#import "/src/main.typ" as cntopo
 #import "/docs/style.typ"
 
 #let show-module = module => tidy.show-module(
   tidy.parse-module(
-    read("/lib/" + module + ".typ"),
+    read("/src/" + module + ".typ"),
     scope: (cntopo: cntopo, cetz: cntopo.cetz, canvas: cntopo.cetz.canvas),
     preamble: "
     #import \"@preview/fletcher:0.5.8\": diagram, node, edge
