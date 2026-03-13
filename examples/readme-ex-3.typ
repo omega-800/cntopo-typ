@@ -18,8 +18,8 @@
 )
 #let node = node.with(width: 4em, height: 4em)
 #diagram(
-  node-stroke: blue,
-  node-fill: blue.lighten(95%),
+  node-stroke: black,
+  node-fill: white,
   node((-1, 1), shape: monitor.with(label: "192.168.0.69"), name: <c1>),
   node((-1, 2), shape: monitor.with(label: "192.168.0.33"), name: <c2>),
   node((0, 2.5), shape: server.with(label: "192.168.0.101"), name: <srv1>),

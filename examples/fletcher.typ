@@ -4,7 +4,15 @@
 #set text(font: "FreeSans")
 
 #let ex = flat => {
-  let (server, monitor, switch, router, l3-switch, cloud, w-dual-ap) = fletcher-shapes(
+  let (
+    server,
+    monitor,
+    switch,
+    router,
+    l3-switch,
+    cloud,
+    w-dual-ap,
+  ) = fletcher-shapes(
     stroke: blue.lighten(50%),
     stroke-inner: white,
     fill: blue,
@@ -14,8 +22,8 @@
   let cloud = cloud.with(override-color: true)
   let node = node.with(width: 6em, height: 6em)
   diagram(
-    node-stroke: orange,
-    node-fill: orange.lighten(90%),
+    node-stroke: blue,
+    node-fill: blue.lighten(90%),
     node((-1, 1), shape: monitor.with(label: "192.168.0.69"), name: <c1>),
     node((-1, 2), shape: monitor.with(label: "192.168.0.33"), name: <c2>),
     node((0, 2.5), shape: server.with(label: "192.168.0.101"), name: <srv1>),
@@ -43,13 +51,16 @@
       inset: 5em,
       fill: white,
       // label: [net1\ 192.168.1.0/24],
-      shape: cloud.with(label: [net1\ 192.168.0.0/24], label-pos: right),
+      shape: cloud.with(
+        label: pad(left: 1em)[net1\ 192.168.0.0/24],
+        label-pos: right,
+      ),
     ),
     edge(<s1>, <c1>),
     edge(<s1>, <c2>),
     edge(<s2>, <srv1>),
     edge(<s2>, <srv2>),
-    edge(<r1>, <s1>),
+    edge(<r1>, <s1>, label: ".1", label-side: center, label-pos: .75em),
     edge(<s1>, <s2>),
     edge(<r1>, <ap>, dash: "dashed"),
   )
@@ -75,12 +86,13 @@
   node((2, 0), shape: router, name: <c3>),
   node((0.5, 1), shape: router, name: <c4>),
   node((1.5, 1), shape: router, name: <c5>),
-  edge(<c1>, (0, 0.5)),
-  edge(<c2>, (1, 0.5)),
-  edge(<c3>, (2, 0.5)),
-  edge(<c4>, (0.5, 0.5)),
-  edge(<c5>, (1.5, 0.5)),
+  edge(<c1>, (0, 0.5), label: ".1", label-pos: .6em, label-side: center),
+  edge(<c2>, (1, 0.5), label: ".2", label-pos: .6em, label-side: center),
+  edge(<c3>, (2, 0.5), label: ".3", label-pos: .6em, label-side: center),
+  edge(<c4>, (0.5, 0.5), label: ".4", label-pos: .6em, label-side: center),
+  edge(<c5>, (1.5, 0.5), label: ".5", label-pos: .6em, label-side: center),
   edge((-0.5, 0.5), (2.5, 0.5)),
+  node((3, .5), stroke: none, [10.0.0.0/24]),
 )
 
 #let (

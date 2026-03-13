@@ -11,6 +11,7 @@
 ///   node((2,0), detail: "router", flat: false)
 /// })
 /// ```
+/// -> function
 #let node-class-router = (sx, sy, stroke, fill) => {
   let arrs = (sx * 0.65, sy * 0.4)
   let arr = arrow.with(stroke: stroke, fill: fill)
@@ -35,6 +36,7 @@
 ///   node((2,0), detail: "switch", flat: false)
 /// })
 /// ```
+/// -> function
 #let node-class-switch = (sx, sy, stroke, fill) => {
   let arrs = (sx * 0.75, sy * 0.4)
   let arr = arrow.with(stroke: stroke, fill: fill)
@@ -57,6 +59,7 @@
 ///   node((2,0), detail: "hub", flat: false)
 /// })
 /// ```
+/// -> function
 #let node-class-hub = (sx, sy, stroke, fill) => {
   arrows((0, 0), (sx * 1.6, sy), stroke: stroke, fill: fill, type: "two")
 }
@@ -71,6 +74,7 @@
 ///   node((2,0), detail: "fe-hub", flat: false)
 /// })
 /// ```
+/// -> function
 #let node-class-fe-hub = (sx, sy, stroke, fill) => {
   // TODO: standardized licon sizes
   arrow((0, 0), (sx * 1.6, sy), stroke: stroke, fill: fill)
@@ -86,6 +90,7 @@
 ///   node((2,0), detail: "l3-switch", flat: false)
 /// })
 /// ```
+/// -> function
 #let node-class-l3-switch = (sx, sy, stroke, fill) => {
   let arrs = (sx * 0.5, sy * 0.3)
   let arrp = (sx * 0.6, 0)
@@ -124,6 +129,7 @@
 ///   node((2,0), detail: "ap", flat: false)
 /// })
 /// ```
+/// -> function
 #let node-class-ap = (sx, sy, stroke, fill) => {
   wireless-wave((0, -sy * 2 / 7), (sx * 0.8, sy * .1), stroke: stroke)
 }
@@ -138,6 +144,7 @@
 ///   node((2,0), detail: "dual-ap", flat: false)
 /// })
 /// ```
+/// -> function
 #let node-class-dual-ap = (sx, sy, stroke, fill) => {
   wireless-wave((0, -sy * 2 / 7), (sx * 0.8, sy * .1), stroke: stroke)
   wireless-wave((0, sy * 2 / 7), (sx * 0.8, sy * .1), stroke: stroke)
@@ -154,12 +161,13 @@
 ///   node((2,0), detail: "mesh-ap", flat: false)
 /// })
 /// ```
+/// -> function
 #let node-class-mesh-ap = (sx, sy, stroke, fill) => {
   cetz.draw.content((0, sy * 2 / 7), text(
     fill: stroke-to-paint(stroke),
     // TODO: dynamic font size
     // FIXME: skew text
-    size: 2em * sx,
+    size: 1.5em * sx,
     weight: "bold",
   )[MESH])
   wireless-wave((0, -sy * 2 / 7), (sx * 0.8, sy * .1), stroke: stroke)

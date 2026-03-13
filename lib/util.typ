@@ -112,8 +112,10 @@
 #let resolve-pos = (pos, (dsx, dsy)) => {
   let s = pos.at(1, default: (dsx, dsy))
   let size = if type(s) == array { s } else { (s * dsx, s * dsy) }
+  let p = pos.first(default: (0, 0))
+  let p = if type(p) == array { p } else { (p, p) }
   (
-    pos.first(default: (0, 0)),
+    p,
     size,
   )
 }
@@ -124,7 +126,7 @@
   },
 )
 
-// TODO: 
+// TODO:
 /// Default stroke
 /// -> stroke
 #let stroke-def = black + 2pt

@@ -1,5 +1,5 @@
 #import "util.typ": *
-#import "../lib/main.typ": cetz, fletcher-shapes
+#import "../lib/main.typ": cetz, fletcher-shapes, icons
 #import "@preview/fletcher:0.5.8" as fletcher: diagram, edge, node
 
 #show link: underline.with(stroke: 1pt + blue.lighten(70%))
@@ -130,143 +130,138 @@ A modular set of CeTZ-powered computer network topology icons with Fletcher inte
 
 = Overview
 
-= API
+`cntopo-typ` is a collection of computer network topology icons, designed to be easy to use, extensible and work well with existing frameworks like CeTZ or Fletcher. The two main functions it provides are `fletcher-shapes` and `icons`, yielding all of the icons for use with Fletcher and CeTZ respectively. Both are parametarized the same way, as well as most of the icons in this package. All `node` icons are provided with 2d (`flat: true`) and 3d (`flat: false`) variants.
 
-Whenever `..pos` is used, the positional arguments can be one of these:
+Some important terms to clarify how the icon construction works: 
+
+- #link(<node>, "Node"): An icon representing a node in a network which is not a client
+- #link(<client>, "Client"): An icon representing a client node in a network
+- #link(<shape>, "Shape"): The container holding the node's characteristics (icon, name, details...), eg. circle
+- #link(<class>, "Class"): The large portion of a node containing an icon or content
+- #link(<detail>, "Detail"): The small bottom portion of a node containing an icon or content
+
+== Note
+
+Whenever `..pos` is used, the positional arguments can be one of:
+
 - none $=>$ defaults to the position ```typst (0,0)``` and a preconfigured default size for the specific shape
 - ```typst (x, y)``` $=>$ sets the position of the icon to the x and y value
-- ```typst (x, y), (w, h)``` $=>$ sets the position of the icon to the x and y value and its radius to w (width) and h (height)
+- ```typst (x, y), (w, h)``` $=>$ sets the position of the icon to the x and y value and its radius to w (x radius) and h (y radius)
 - ```typst (x, y), r``` $=>$ sets the radius of the icon to ```typst (r, r)```
+
+It is recommended to explicitly set the `node` sizes when working with Fletcher like so: 
+
+```typst
+#import "@preview/fletcher:0.5.8": diagram, edge, node
+
+#let node = node.with(width: 4em, height: 4em)
+
+#diagram( ... )
+```
+
+#pagebreak()
+
+= API
 
 == Main
 
 #show-module("main")
 
-NOTE: All of these shapes can be accessed in these three ways:
+== Node shapes <shape>
+
+All node shapes can be accessed in these three ways:
+
 ```typst
 // Example: rect
 node(shape: node-shape-rect)
 node(shape: node-shapes.rect)
-node(shape: "rect")
-```
-NOTE: A custom node shape can be passed to the `shape` parameter. It must contain the following signature:
-```typst
-#let my-custom-shape = (
-  /// width
-  sx,
-  /// height
-  sy,
-  /// corner radius
-  radius,
-  /// stroke
-  stroke,
-  /// fill
-  fill,
-  /// if shape is 3d
-  flat
-) => {
-  if not flat {
-    cetz.draw.circle(
-      (0, 0, 1),
-      radius: (sx, sy),
-      stroke: stroke,
-      fill: fill,
-    )
-  }
-  cetz.draw.circle(
-    (0, 0),
-    radius: (sx, sy),
-    stroke: stroke,
-    fill: fill,
-  )
-}
+node(shape: "rect")           // -> recommended
 ```
 
-== Node shapes
+A custom node shape can be passed to the #link(<-node.shape>, `shape`) parameter. It must return a cetz object and conform to the following signature:
+
+```typst
+#let my-custom-shape = (
+  sx,     /// width
+  sy,     /// height
+  radius, /// corner radius
+  stroke, /// stroke
+  fill,   /// fill
+  flat    /// if shape is 3d
+) => { ... }
+```
 
 #show-module("node-shape")
 
-NOTE: All of these classes can be accessed in these three ways:
+== Node classes <class>
+
+All node classes can be accessed in these three ways:
+
 ```typst
 // Example: router
 node(class: node-class-router)
 node(class: node-classes.router)
-node(class: "router")
+node(class: "router")         // -> recommended
 ```
-NOTE: A custom node class can be passed to the `class` parameter. It must contain the following signature:
+
+A custom node class can be passed to the #link(<-node.class>, `class`) parameter. It must return a cetz object and conforort to the following signature:
+
 ```typst
 #let my-custom-class = (
-  /// parent node width
-  sx,
-  /// parent node height
-  sy,
-  /// stroke
-  stroke,
-  /// fill
-  fill
-) => {
-  cetz.draw.circle(
-    (0, 0, 0),
-    radius: (sx, sy),
-    stroke: stroke,
-    fill: fill,
-  )
-}
+  sx,     /// parent node width
+  sy,     /// parent node height
+  stroke, /// stroke
+  fill    /// fill
+) => { ... }
 ```
-NOTE: Classes can also be regular content:
+
+Classes can also be regular content:
+
 ```typst
 node(class: [ABC])
 ```
-NOTE: Classes can also be used as details and vice-versa.
 
-NOTE: Classes influence node shape if it's set to `auto`
+Classes can also be used as #link(<detail>, "details") and vice-versa.
 
-== Node classes
+NOTE: Classes influence the node's #link(<-node.shape>, `shape`) if it's set to `auto`
 
 #show-module("node-class")
 
-NOTE: All of these details can be accessed in these three ways:
+== Node details <detail>
+
+All node details can be accessed in these three ways:
+
 ```typst
 // Example: secure
 node(detail: node-detail-secure)
 node(detail: node-details.secure)
-node(detail: "secure")
+node(detail: "secure")        // -> recommended
 ```
-NOTE: A custom node detail can be passed to the `detail` parameter. It must contain the following signature:
+
+A custom node detail can be passed to the #link(<-node.detail>, "detail") parameter. It must return a cetz object and conform to the following signature:
+
 ```typst
 #let my-custom-detail = (
-  /// parent node width
-  sx,
-  /// parent node height
-  sy,
-  /// stroke
-  stroke,
-  /// fill
-  fill
-) => {
-  cetz.draw.circle(
-    (0, 0, 0),
-    radius: (sx, sy),
-    stroke: stroke,
-    fill: fill,
-  )
-}
+  sx,     /// parent node width
+  sy,     /// parent node height
+  stroke, /// stroke
+  fill    /// fill
+) => { ... }
 ```
-NOTE: Details can also be regular content:
+
+Just like classes, details can also be regular content:
+
 ```typst
 node(detail: [ABC])
 ```
-NOTE: Details can also be used as classes and vice-versa.
-
-== Node details
 
 #show-module("node-detail")
 
-== Nodes
+== Nodes <node>
 
 #show-module("nodes")
 
-== Clients
+== Clients <client>
 
 #show-module("clients")
 
@@ -282,3 +277,51 @@ NOTE: Details can also be used as classes and vice-versa.
 
 // #show-module("util")
 // #show-module("links")
+
+#pagebreak()
+
+#set page(header: text(size: 2em)[```typst flat: true```])
+
+= Shapes <all-shapes>
+
+These are all of the shapes provided by #link(<-icon-presets>, `icon-presets`)
+
+#let icon-set = icons(
+  fill: blue,
+  fill-inner: white,
+  stroke-inner: white,
+  stroke: blue.lighten(50%) + 2pt,
+  flat: false,
+)
+
+#let w = 6
+#let h = 6
+#let render-all = i => {
+  for on-page in i.pairs().chunks(w * h) {
+    cetz.canvas(length: 3.5em, {
+      cetz.draw.grid(
+        (0, 0),
+        (w * 2, h * 3 - 1),
+        stroke: blue,
+        step: 1,
+      )
+      on-page
+        .chunks(w)
+        .enumerate()
+        .map(((y, c)) => c
+          .rev()
+          .enumerate()
+          .map(((x, (k, v))) => v(
+            ((w - x) * 2 - 1, (h - y) * 3 - 2),
+            label: box(fill: white)[#k],
+          )))
+        .flatten()
+    })
+  }
+}
+
+#render-all(icon-set)
+
+#set page(header: text(size: 2em)[```typst flat: false```])
+
+#render-all(icon-set.pairs().map(((k, v)) => (k, v.with(flat: true))).to-dict())

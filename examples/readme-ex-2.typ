@@ -1,4 +1,4 @@
-#import "../lib/main.typ": cetz, fletcher-shapes, icons, wireless-wave-link
+#import "../lib/main.typ": cetz, fletcher-shapes, icons
 #import "@preview/fletcher:0.5.8" as fletcher: diagram, edge, node
 
 #set page(height: 20em, width: 50em, margin: 0pt)

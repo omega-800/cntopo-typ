@@ -182,11 +182,13 @@
   set par(justify: false, hanging-indent: 1em, first-line-indent: 0em)
 
   block(breakable: style-args.break-param-descriptions)[
+    #heading(fn.name, level: style-args.first-heading-level + 1)
     #(style-args.style.show-parameter-list)(fn, style-args)
     #if style-args.enable-cross-references {
       label(style-args.label-prefix + fn.name + "()")
     }
   ]
+
   pad(x: 0em, eval-docstring(fn.description, style-args))
 
   let parameter-block
@@ -238,14 +240,14 @@
     stack(
       dir: ltr,
       spacing: 1.2em,
-      if style-args.enable-cross-references [
-        #set text(font: "DejaVu Sans Mono", size: 0.85em, weight: 340)
-        #text(var.name, fill: fn-color)
-        #label(style-args.label-prefix + var.name)
-      ] else [
-        #set text(font: "DejaVu Sans Mono", size: 0.85em, weight: 340)
-        #text(var.name, fill: fn-color)
-      ],
+      [
+        #heading(
+          text(fill: fn-color, var.name),
+          level: style-args.first-heading-level + 1,
+        )
+        #if style-args.enable-cross-references {
+          label(style-args.label-prefix + var.name)
+        }],
       type,
     ),
   )

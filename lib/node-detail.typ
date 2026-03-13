@@ -11,6 +11,7 @@
 ///   node((2,0), class: "secure", flat: false)
 /// })
 /// ```
+/// -> function
 #let node-detail-secure = (sx, sy, stroke, fill) => {
   lock(
     (0, 0),
@@ -32,6 +33,7 @@
 ///   node((2,0), class: "cloud", flat: false)
 /// })
 /// ```
+/// -> function
 #let node-detail-cloud = (sx, sy, stroke, fill) => {
   cloud(
     (0, 0),

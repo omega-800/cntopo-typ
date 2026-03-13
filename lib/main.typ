@@ -6,11 +6,6 @@
 #import "misc.typ": *
 
 /// Default node icons
-///
-/// ```example
-///   TODO
-/// ```
-///
 /// -> dict
 #let default-nodes = (
   router: node.with(class: "router"),
@@ -26,9 +21,7 @@
 
 /// Icon presets
 ///
-/// ```example
-///   TODO
-/// ```
+/// These shapes will be available from the @icons and @fletcher-shapes functions. A complete showcase of all of the icons can be found at #link(<all-shapes>, "the end of this document")
 ///
 /// -> dict
 #let icon-presets = (
@@ -66,15 +59,42 @@
 /// Applies styling to all of the CeTZ icons
 ///
 /// ```example
-///   TODO
+/// #let (router, switch, l3-switch, cloud) = icons(
+///   stroke: purple,
+///   fill: purple.lighten(90%),
+///   flat: false
+/// )
+/// #set text(size: .75em)
+/// #canvas({
+///   import cetz.draw: *
+///   line((2,2), (0,4))
+///   line((2,2), (4,4))
+///   line((2,2), (0,0))
+///   line((2,2), (4,0))
+///   router((0,4), detail: [DR])
+///   router((4,4), detail: [BDR])
+///   router((0,0), detail: [DROTHER])
+///   router((4,0), detail: [DROTHER])
+///   switch((2,2), detail: "secure")
+/// })
 /// ```
 ///
 /// -> dict
 #let icons(
+  /// Icon outer stroke
+  /// -> stroke
   stroke: stroke-def,
+  /// Icon main fill
+  /// -> paint
   fill: fill-def,
+  /// Icon inner stroke, defaults to @icons.stroke
+  /// -> stroke | auto
   stroke-inner: auto,
+  /// Icon inner fill, defaults to paint of @icons.stroke
+  /// -> paint | auto
   fill-inner: auto,
+  /// If the icon should be flat or 3d
+  /// -> bool
   flat: true,
 ) = (
   icon-presets
@@ -95,13 +115,32 @@
 /// Helper function to convert the CeTZ icons to Fletcher shapes
 ///
 /// ```example
-///   TODO
+/// #import "@preview/fletcher:0.5.8": diagram, edge, node
+///
+/// #let i = icons(
+///   stroke: purple,
+///   fill: purple.lighten(90%),
+///   flat: false
+/// )
+/// #let (router, monitor, switch) = to-fletcher-shapes(i)
+/// #let node = node.with(width: 4em, height: 4em)
+///
+/// #diagram(
+///   node((0.5,0.25), [10.0.0.0/24]),
+///   node((0,1), shape: monitor.with(label: ".2")),
+///   edge(),
+///   node((1,2), shape: switch.with(detail: [S1]), name: <s>),
+///   edge(),
+///   node((0,2), shape: monitor.with(label: ".3")),
+///   node((1,1), shape: router.with(label: ".1", detail: [R1])),
+///   edge(<s>),
+/// )
 /// ```
 ///
 /// -> dict
 #let to-fletcher-shapes(
   /// CeTZ icons
-  /// -> TODO
+  /// -> dict
   i,
 ) = (
   i
@@ -140,13 +179,31 @@
 /// Shapes to use in Fletcher diagrams.
 ///
 /// ```example
-///  #import "@preview/fletcher:0.5.8" as fletcher: diagram, edge, node
-///  #diagram(node((0,0), "TO"), edge("->"), node((2,0), "DO"))
+/// #import "@preview/fletcher:0.5.8": diagram, edge, node
+///
+/// #let node = node.with(width: 4em, height: 4em)
+/// #let (router, switch, server) = fletcher-shapes(
+///   stroke: green.lighten(20%),
+///   fill: green.lighten(90%),
+///   stroke-inner: green,
+///   fill-inner: green
+/// )
+///
+/// #diagram(
+///   node((0.5,0.25), [10.0.0.0/24]),
+///   node((0,1), shape: server.with(label: ".2")),
+///   edge(),
+///   node((1,2), shape: switch, name: <s>),
+///   edge(),
+///   node((0,2), shape: server.with(label: ".3")),
+///   node((1,1), shape: router.with(label: ".1")),
+///   edge(<s>),
+/// )
 /// ```
 ///
 /// -> dict
 #let fletcher-shapes(
-  /// The same args as in icons
-  /// -> TODO
+  /// The same args as in @icons
+  /// -> arguments
   ..args,
 ) = to-fletcher-shapes(icons(..args.named()))

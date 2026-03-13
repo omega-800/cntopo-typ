@@ -8,6 +8,7 @@
 ///   node((2,0), shape: "circle", flat: false)
 /// })
 /// ```
+/// -> function
 #let node-shape-circle = (sx, sy, radius, stroke, fill, flat) => {
   if not flat {
     cetz.draw.circle(
@@ -41,6 +42,7 @@
 ///   node((2,0), shape: "hex", flat: false)
 /// })
 /// ```
+/// -> function
 #let node-shape-hex = (sx, sy, radius, stroke, fill, flat) => {
   if not flat {
     cetz.draw.line(
@@ -83,6 +85,7 @@
 ///   node((2,0), shape: "square", flat: false)
 /// })
 /// ```
+/// -> function
 #let node-shape-square = (sx, sy, radius, stroke, fill, flat) => {
   if not flat {
     cetz.draw.line(
@@ -119,6 +122,7 @@
 ///   node((2,0), shape: "rect", flat: false)
 /// })
 /// ```
+/// -> function
 #let node-shape-rect = (sx, sy, radius, stroke, fill, flat) => {
   if not flat {
     cetz.draw.line(
@@ -155,6 +159,7 @@
 ///   node((2,0), shape: "bridge", flat: false)
 /// })
 /// ```
+/// -> function
 #let node-shape-bridge = (sx, sy, radius, stroke, fill, flat) => {
   let s = override-stroke(stroke, miter-limit: 1)
   if not flat {
@@ -213,6 +218,7 @@
 ///   node((2,0), shape: "firewall", flat: false)
 /// })
 /// ```
+/// -> function
 #let node-shape-firewall = (sx, sy, radius, stroke, fill, flat) => {
   let s = override-stroke(stroke, miter-limit: 1)
   if not flat {
