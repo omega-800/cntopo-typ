@@ -192,3 +192,86 @@
     draw-lbl(label, label-pos, sx, sy)
   })
 }
+
+
+
+/// Key
+///
+/// ```example
+/// #cetz.canvas({
+///   key()
+/// })
+/// ```
+#let key(
+  /// The position (and size)
+  /// -> (x, y) | (x, y), (w, h)
+  ..pos,
+  /// Icon outer stroke
+  /// -> stroke
+  stroke: stroke-def,
+  /// Icon main fill
+  /// -> paint
+  fill: fill-def,
+  /// Icon inner stroke
+  /// -> stroke | auto
+  stroke-inner: auto,
+  /// Icon inner fill
+  /// -> paint | auto
+  fill-inner: auto,
+  /// Not implemented yet
+  /// -> bool
+  flat: true,
+  /// Label
+  /// -> str | content | none
+  label: none,
+  /// Label position
+  /// -> alignment
+  label-pos: bottom,
+) = {
+  let ((x, y), (sx, sy)) = resolve-pos(pos.pos(), (1, .5))
+  let (stroke-i, fill-i) = resolve-style(
+    stroke,
+    fill,
+    stroke-inner,
+    fill-inner,
+  )
+  cetz.draw.group({
+    cetz.draw.set-origin((x, y))
+    cetz.draw.circle(
+      (-sx / 3.5 * 2, 0),
+      radius: (sx / 2.5, sy * 2 / 2.5),
+      stroke: stroke,
+      fill: fill,
+    )
+    cetz.draw.circle(
+      (-sx / 3 * 2, 0),
+      radius: (sx / 12, sy / 6),
+      stroke: stroke,
+      fill: fill-i,
+    )
+    cetz.draw.line(
+      (-sx * .225, sy / 3),
+      (sx * .9, sy / 3),
+      (sx, 0),
+
+      (sx * .9, -sy / 5),
+
+      (sx * .8, -sy / 2.5),
+      (sx * .7, -sy / 5),
+      (sx * .6, -sy / 2.5),
+      (sx * .5, -sy / 5),
+      (sx * .4, -sy / 2.5),
+      (sx * .3, -sy / 5),
+      (sx * .2, -sy / 2.5),
+      (sx * .1, -sy / 5),
+      (0, -sy / 2.5),
+      (-sx * .1, -sy / 5),
+      (-sx * .2, -sy / 2.5),
+
+      (-sx * .25, -sy / 2.5),
+      stroke: stroke,
+      fill: fill,
+    )
+    draw-lbl(label, label-pos, sx, sy)
+  })
+}
