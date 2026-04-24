@@ -12,16 +12,16 @@
 #let node-shape-circle = (sx, sy, radius, stroke, fill, flat) => {
   if not flat {
     cetz.draw.circle(
-      (0, 0, 1),
+      (0, 0, sy),
       radius: (sx, sy),
       stroke: stroke,
       fill: fill,
     )
     cetz.draw.line(
-      (sx, sy * 1 / 8, 1),
+      (sx, sy * 1 / 8, sy),
       (sx, 0, 0),
       (-sx, 0, 0),
-      (-sx, sy * 1 / 8, 1),
+      (-sx, sy * 1 / 8, sy),
       fill: fill,
       stroke: stroke,
     )
@@ -47,11 +47,11 @@
   if not flat {
     cetz.draw.line(
       (-sx, 0, 0),
-      (-sx, 0, 1),
-      (-sx, sy * 1 / 8, 1),
-      (-sx / 2, -sy, 1),
-      (sx / 2, -sy, 1),
-      (sx, sy * 1 / 8, 1),
+      (-sx, 0, sy),
+      (-sx, sy * 1 / 8, sy),
+      (-sx / 2, -sy, sy),
+      (sx / 2, -sy, sy),
+      (sx, sy * 1 / 8, sy),
       (sx, 0, 0),
       fill: fill,
       stroke: stroke,
@@ -68,12 +68,23 @@
       stroke: stroke,
     )
   } else {
-    cetz.draw.polygon(
-      (0, 0),
-      6,
-      stroke: stroke,
+    cetz.draw.line(
+      (-sx / 2, sy * .9),
+      (sx / 2, sy * .9),
+      (sx, 0),
+      (sx / 2, -sy * .9),
+      (-sx / 2, -sy * .9),
+      (-sx, 0),
+      (-sx / 2, sy * .9),
       fill: fill,
+      stroke: stroke,
     )
+    // cetz.draw.polygon(
+    //   (0, 0),
+    //   6,
+    //   stroke: stroke,
+    //   fill: fill,
+    // )
   }
 }
 
@@ -90,9 +101,9 @@
   if not flat {
     cetz.draw.line(
       (sx, sy, 0),
-      (sx, sy, 1),
-      (sx, -sy, 1),
-      (-sx, -sy, 1),
+      (sx, sy, sy),
+      (sx, -sy, sy),
+      (-sx, -sy, sy),
       (-sx, -sy, 0),
       (-sx, 0, 0),
       fill: fill,
@@ -100,7 +111,7 @@
     )
     cetz.draw.line(
       stroke: stroke,
-      (sx, -sy, 1),
+      (sx, -sy, sy),
       (sx, -sy, 0),
     )
   }
@@ -127,9 +138,9 @@
   if not flat {
     cetz.draw.line(
       (sx, sy * 2 / 3, 0),
-      (sx, sy * 2 / 3, 1),
-      (sx, -sy * 2 / 3, 1),
-      (-sx, -sy * 2 / 3, 1),
+      (sx, sy * 2 / 3, sy),
+      (sx, -sy * 2 / 3, sy),
+      (-sx, -sy * 2 / 3, sy),
       (-sx, -sy * 2 / 3, 0),
       (-sx, 0, 0),
       fill: fill,
@@ -137,7 +148,7 @@
     )
     cetz.draw.line(
       stroke: stroke,
-      (sx, -sy * 2 / 3, 1),
+      (sx, -sy * 2 / 3, sy),
       (sx, -sy * 2 / 3, 0),
     )
   }
@@ -169,13 +180,13 @@
       close: true,
       {
         cetz.draw.line(
-          (sx, sy * .9, 1),
-          (sx, -sy, 1),
-          (-sx, -sy, 1),
+          (sx, sy * .9, sy),
+          (sx, -sy, sy),
+          (-sx, -sy, sy),
           (-sx, sy * .9, 0),
         )
         cetz.draw.arc(
-          (-sx, sy * .9, 1),
+          (-sx, sy * .9, sy),
           start: -145deg,
 
           delta: 112.5deg,
@@ -187,8 +198,8 @@
       stroke: s,
       fill: fill,
       (sx, -sy, 0),
-      (sx, -sy, 1),
-      (sx, sy * .9, 1),
+      (sx, -sy, sy),
+      (sx, sy * .9, sy),
       (sx, sy * .9, 0),
       (sx, -sy, 0),
     )
@@ -223,15 +234,15 @@
   let s = override-stroke(stroke, miter-limit: 1)
   if not flat {
     cetz.draw.rect(
-      (-sx, -sy, 1),
-      (sx, sy, 1),
+      (-sx, -sy, sy),
+      (sx, sy, sy),
       stroke: stroke,
       fill: fill,
     )
     cetz.draw.line(
       (-sx, sy, 0),
-      (-sx, sy, 1),
-      (sx, sy, 1),
+      (-sx, sy, sy),
+      (sx, sy, sy),
       (sx, sy, 0),
       stroke: s,
       fill: fill,
@@ -241,13 +252,13 @@
       cetz.draw.line(
         stroke: stroke,
         (x, sy, 0),
-        (x, sy, 1),
+        (x, sy, sy),
       )
     }
     cetz.draw.line(
       (sx, sy, 0),
-      (sx, sy, 1),
-      (sx, -sy, 1),
+      (sx, sy, sy),
+      (sx, -sy, sy),
       (sx, -sy, 0),
       stroke: s,
       fill: fill,
@@ -257,7 +268,7 @@
       cetz.draw.line(
         stroke: stroke,
         (sx, y, 0),
-        (sx, y, 1),
+        (sx, y, sy),
       )
     }
   }
