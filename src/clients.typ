@@ -1,5 +1,68 @@
 #import "util.typ": *
 
+// TODO:
+/// User
+///
+/// ```example
+/// #cetz.canvas({
+///   user(label: "Alice")
+/// })
+/// ```
+#let user(
+  /// The position (and size)
+  /// -> (x, y) | (x, y), (w, h)
+  ..pos,
+  /// Icon outer stroke
+  /// -> stroke
+  stroke: stroke-def,
+  /// Icon main fill
+  /// -> paint
+  fill: fill-def,
+  /// Icon inner stroke
+  /// -> stroke | auto
+  stroke-inner: auto,
+  /// Icon inner fill
+  /// -> paint | auto
+  fill-inner: auto,
+  /// Not implemented yet
+  /// -> bool
+  flat: true,
+  /// Label
+  /// -> str | content | none
+  label: none,
+  /// Label position
+  /// -> alignment
+  label-pos: bottom,
+) = {
+  let ((x, y), (sx, sy)) = resolve-pos(pos.pos(), ratios.monitor)
+  let (stroke-i, fill-i) = resolve-style(stroke, fill, stroke-inner, fill-inner)
+
+  let rt = cetz.draw.rect.with(
+    stroke: stroke,
+    fill: fill,
+  )
+  let crc = cetz.draw.circle.with(
+    stroke: stroke,
+    fill: fill,
+  )
+  cetz.draw.group({
+    cetz.draw.set-origin((x, y))
+    crc(
+      (0, sy * 0.5),
+      radius: (sx + sy) / 4,
+    )
+    cetz.draw.arc(
+      (sx * .8, -sy),
+      start: 0deg,
+      delta: 180deg,
+      radius: (sx * .8, sy),
+      stroke: stroke,
+      fill: fill,
+    )
+    draw-lbl(label, label-pos, sx, sy)
+  })
+}
+
 /// Monitor
 ///
 /// ```example

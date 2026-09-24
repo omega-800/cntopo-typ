@@ -48,6 +48,7 @@
       sec-firewall: node.with(shape: "firewall", class: "secure"),
       // clients
       monitor: monitor,
+      user: user,
       // laptop: laptop,
       server: server,
       // misc
